@@ -1,0 +1,93 @@
+{
+    "name": "alden",
+    "displayName": "Alden",
+    "description": "A feature-rich language support for Alden in VS Code",
+    "author": "Kehinde Akinsanya",
+    "license": "MIT",
+    "version": "0.0.1",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/aldenlang/aldenlans"
+    },
+    "publisher": "alden",
+    "categories": [
+        "Programming Languages",
+        "Snippets"
+    ],
+    "icon": "images/alden.png",
+    "keywords": [
+        "alden",
+        "aldenlans"
+    ],
+    "engines": {
+        "vscode": "^1.61.0"
+    },
+    "activationEvents": [
+        "onLanguage:alden"
+    ],
+    "main": "./client/out/extension",
+    "contributes": {
+        "languages": [
+            {
+                "id": "alden",
+                "extensions": [
+                    ".alden"
+                ],
+                "aliases": [
+                    "Alden",
+                    "alden"
+                ]
+            }
+        ],
+        "snippets": [
+            {
+                "language": "alden",
+                "path": "./snippets/snippets.code-snippets"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "alden",
+                "scopeName": "source.alden",
+                "path": "./syntaxes/alden.tmLanguage.json"
+            }
+        ],
+        "configuration": {
+            "type": "object",
+            "title": "Example configuration",
+            "properties": {
+                "alden": {
+                    "type": "object",
+                    "title": "Alden",
+                    "properties": {
+                        "hello": {
+                            "type": "string",
+                            "default": "Hello World!"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run esbuild-base -- --minify",
+        "esbuild-base": "esbuild ./client/src/extension.ts --bundle --outfile=./client/out/main.js --external:vscode --format=cjs --platform=node",
+        "esbuild": "npm run esbuild-base -- --sourcemap",
+        "compile": "tsc -b",
+        "watch": "tsc -b -w",
+        "lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
+        "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
+        "test": "sh ./scripts/e2e.sh"
+    },
+    "devDependencies": {
+        "@types/mocha": "^8.2.2",
+        "@types/node": "^12.12.0",
+        "@typescript-eslint/eslint-plugin": "^4.23.0",
+        "@typescript-eslint/parser": "^4.23.0",
+        "esbuild": "^0.13.8",
+        "eslint": "^7.26.0",
+        "mocha": "^8.3.2",
+        "typescript": "^4.4.3"
+    },
+    "dependencies": {}
+}

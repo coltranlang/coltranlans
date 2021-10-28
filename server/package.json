@@ -1,0 +1,30 @@
+{
+	"name": "alden",
+	"displayName": "Alden",
+	"description": "A feature-rich language support for PearScript in VS Code",
+	"author": "Kehinde Akinsanya",
+	"license": "MIT",
+	"version": "0.0.1",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/aldenlang/aldenlans"
+	},
+	"publisher": "alden",
+	"categories": [
+		"Programming Languages",
+		"Snippets"
+	],
+	"icon": "images/alden.png",
+	"keywords": [
+		"alden",
+		"aldenlans"
+	],
+	"engines": {
+		"node": "*"
+	},
+	"dependencies": {
+		"vscode-languageserver": "^7.0.0",
+		"vscode-languageserver-textdocument": "^1.0.1"
+	},
+	"scripts": {}
+}

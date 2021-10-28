@@ -1,0 +1,49 @@
+{
+    "comments": {
+        // symbol used for single line comment. Remove this entry if your language does not support line comments
+        "lineComment": "#",
+        // symbols used for start and end a block comment. Remove this entry if your language does not support block comments
+        "blockComment": [ "/*", "*/" ],
+        // comments color (in HTML format)
+        "color": "#808080"
+        
+    },
+    // symbols used as brackets
+    "brackets": [
+        ["{", "}"],
+        ["[", "]"],
+        ["(", ")"]
+    ],
+    // symbols that are auto closed when typing
+    "autoClosingPairs": [
+        ["{", "}"],
+        ["[", "]"],
+        ["(", ")"],
+        ["\"", "\""],
+        ["'", "'"]
+    ],
+    // symbols that can be used to surround a selection
+    "surroundingPairs": [
+        ["{", "}"],
+        ["[", "]"],
+        ["(", ")"],
+        ["\"", "\""],
+        ["'", "'"]
+    ],
+    // auto close brackets
+    "autoCloseBrackets": true,
+    // auto complete brackets
+    "autoCompleteBrackets": true,
+    // auto close quotes
+    "autoCloseQuotes": true,
+    // auto complete quotes
+    "autoCompleteQuotes": true,
+    // auto close brackets
+    "autoCloseBraces": true,
+    // auto complete brackets
+    "autoCompleteBraces": true,
+    // auto close strings
+    "autoCloseStrings": true,
+    // auto complete strings
+    "autoCompleteStrings": true,
+}

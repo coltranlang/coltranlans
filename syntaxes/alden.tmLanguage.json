@@ -1,0 +1,331 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "alden",
+	"patterns": [
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#expression"
+		},
+		{
+			"include": "#strings"
+		},
+		{
+			"include": "#variables"
+		},
+		{
+			"include": "#numbers"
+		},
+		{
+			"include": "#comments"
+		},
+		{
+			"include": "#operators"
+		},
+		{
+			"include": "#functions"
+		},
+		{
+			"include": "#constants"
+		},
+		{
+			"include": "#punctuation"
+		},
+		{
+			"include": "#identifiers"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [
+				{
+					"comment": "Single line comment",
+					"name": "comment.line.number-sign.alden",
+					"match": "#[^\n\r]*"
+				},
+				{
+					"comment": "Keywords",
+					"name": "keyword.control.alden",
+					"match": "\\b(if|elif|else|then|task|endTask|end|class|endClass|for|return|to|continue|while|void|get|from)\\b"
+				},
+				{
+					"comment": "Conditional operators",
+					"name": "keyword.operator.conditional.alden",
+					"match": "\\b(and|or|not)\\b"
+				},
+				{
+					"comment": "Boolean literals",
+					"name": "constant.language.boolean.alden",
+					"match": "\\b(true|false)\\b"
+				},
+				{
+					"comment": "None literal",
+					"name": "constant.language.none.alden",
+					"match": "\\b(none)\\b"
+				},
+				{
+					"comment": "Binary literals",
+					"name": "constant.numeric.binary.alden",
+					"match": "0b[01]+"
+				},
+				{
+					"comment": "Integer literals",
+					"name": "constant.numeric.integer.alden",
+					"match": "\\b(0x[0-9a-fA-F]+|[0-9]+)\\b"
+				},
+				{
+					"comment": "Float literals",
+					"name": "constant.numeric.float.alden",
+					"match": "\\b[0-9]+\\.[0-9]+\\b"
+				},
+				{
+					"comment": "Declaration type",
+					"name": "storage.type.declaration.alden",
+					"match": "\\b(let|final)\\b"
+				},
+				{
+					"comment": "Task name",
+					"match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b\\(",
+					"captures": {
+						"1": {
+							"name": "entity.name.function.alden"
+						}
+					}
+				},
+				{
+					"comment": "@ operator",
+					"name": "keyword.control.alden",
+					"match": "@"
+				},
+				{
+					"comment": "Identifier",
+					"name": "variable.name.alden",
+					"match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b"
+				}
+			]
+		},
+		"expression": {
+			"patterns": [
+				{
+					"include": "#expression-operators"
+				},
+				{
+					"include": "#expression-paren"
+				},
+				{
+					"include": "#expression-function"
+				}
+			]
+		},
+		"expression-operators": {
+			"patterns": [
+				{
+					"comment": "unary operators",
+					"name": "keyword.operator.unary.alden",
+					"match": "\\b(\\+|-|\\!|\\~)\\b"
+				},
+				{
+					"comment": "binary operators",
+					"name": "keyword.operator.binary.alden",
+					"match": "\\b(\\+|-|\\*|\\/|\\%|\\^|\\||\\&|\\<|\\>|\\=|\\<=|\\>=|\\!=|\\<\\>|\\<\\<|\\>\\>|\\=\\=|\\!\\=|\\=\\=\\=|\\!\\=\\=)\\b"
+				},
+				{
+					"comment": "assignment operators",
+					"name": "keyword.operator.assignment.alden",
+					"match": "\\b(\\+=|\\-=|\\*=|\\/=|\\%=|\\^=|\\|=|\\&=|\\<=|\\>=|\\=)\\b"
+				},
+				{
+					"comment": "comparison operators",
+					"name": "keyword.operator.comparison.alden",
+					"match": "\\b(\\<|\\>|\\<=|\\>=|\\=|\\<\\>|\\<\\<|\\>\\>|\\=\\=|\\!\\=|\\=\\=\\=|\\!\\=\\=)\\b"
+				},
+				{
+					"comment": "logical operators",
+					"name": "keyword.operator.logical.alden",
+					"match": "\\b(\\||\\&|\\!)\\b"
+				},
+				{
+					"comment": "bitwise operators",
+					"name": "keyword.operator.bitwise.alden",
+					"match": "\\b(\\^|\\&|\\|)\\b"
+				},
+				{
+					"comment": "other operators",
+					"name": "keyword.operator.other.alden",
+					"match": "\\b(\\?|\\:|\\.)\\b"
+				}
+			]
+		},
+		"expression-paren": {
+			"patterns": [
+				{
+					"comment": "parentheses",
+					"name": "punctuation.section.parens.alden",
+					"match": "\\(|\\)"
+				}
+			]
+		},
+		"expression-function": {
+			"patterns": [
+				{
+					"name": "meta.expression.function.alden",
+					"begin": "\\b(task)\\b",
+					"captures": {
+						"1": {
+							"name": "storage.type.function.alden"
+						}
+					},
+					"end": "\\b(\\()",
+					"patterns": [
+						{
+							"include": "#expression-function-name"
+						},
+						{
+							"include": "#expression-function-parameter"
+						},
+						{
+							"include": "#expression-function-body"
+						}
+					]
+				}
+			]
+		},
+		"expression-function-name": {
+			"patterns": [
+				{
+					"name": "entity.name.function.alden",
+					"match": "\\b(@[\\w\\d_]+)\\b"
+				}
+			]
+		},
+		"expression-function-parameter": {
+			"patterns": [
+				{
+					"name": "meta.expression.function.parameter.alden",
+					"begin": "\\b(\\()",
+					"end": "\\b(\\))"
+				}
+			]
+		},
+		"expression-function-body": {
+			"patterns": [
+				{
+					"name": "meta.expression.function.body.alden",
+					"begin": "\\b(\\{)\\b",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.section.scope.alden"
+						}
+					},
+					"end": "\\b(end)\\b",
+					"patterns": [
+						{
+							"include": "#expression-function-body-content"
+						}
+					]
+				}
+			]
+		},
+		"strings": {
+			"patterns": [
+				{
+					"name": "string.quoted.double.alden",
+					"match": "\"(?:\\\\.|[^\\\\\"])*\"",
+					"patterns": [
+						{
+							"name": "constant.character.escape.alden",
+							"match": "\\\\."
+						}
+					]
+				},
+				{
+					"name": "string.quoted.single.alden",
+					"match": "'(?:\\\\.|[^\\\\'])*'",
+					"patterns": [
+						{
+							"name": "constant.character.escape.alden",
+							"match": "\\\\."
+						}
+					]
+				}
+			]
+		},
+		"variables": {
+			"patterns": [
+				{
+					"comment": "variables",
+					"name": "variable.other.alden",
+					"match": "\\b(?<!(?<!\\.)\\.)(?:r#(?!(self)))?[a-z0-9_]+\\b"
+				}
+			]
+		},
+		"numbers": {
+			"patterns": [
+				{
+					"name": "constant.numeric.integer.myscript",
+					"match": "\\b(\\d+)\\b"
+				},
+				{
+					"name": "constant.numeric.decimal.myscript",
+					"match": "\\b(\\d+\\.\\d+)\\b"
+				}
+			]
+		},
+		"operators": {
+			"patterns": [
+				{
+					"name": "keyword.operator.arithmetic.alden",
+					"match": "\\+|\\-|\\*|\\/|\\%|\\^|\\&|\\||\\<|\\>|\\=|\\!|\\~"
+				},
+				{
+					"name": "keyword.operator.comparison.alden",
+					"match": "\\=\\=|\\!\\=|\\>|\\>\\=|\\<|\\<\\="
+				},
+				{
+					"name": "keyword.operator.logical.alden",
+					"match": "\\&\\&|\\|\\|"
+				},
+				{
+					"name": "keyword.operator.assignment.alden",
+					"match": "\\="
+				}
+			]
+		},
+		
+		"literal": {
+			"patterns": [
+				{
+					"include":  "#array-literal"
+				},
+				{
+					"include":  "#boolean-literal"
+				},
+				{
+					"include":  "#null-literal"
+				},
+				{
+					"include":  "#undefined-literal"
+				},
+				{
+					"include":  "#number-literal"
+				}
+			]
+		},
+		"array-literal": {
+			"patterns": [
+				{
+					"name": "meta.array.alden",
+					"begin": "\\[",
+					"end": "\\]",
+					"patterns": [
+						{
+							"include": "#literal"
+						}
+					]
+				}
+			]
+		}
+	},
+	"scopeName": "source.alden"
+}

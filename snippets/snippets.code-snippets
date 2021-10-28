@@ -1,0 +1,109 @@
+{
+    // task  statement
+    "Task Statement": {
+        "prefix": [
+            "task",
+        ],
+        "body": [
+            "task @${1:name}()",
+            "\t$0",
+            "endTask"
+        ],
+        "description": "Task Statement"
+    },
+    // task implicit return statement
+    "Task Arrow": {
+        "prefix": [
+            "task-arrow",
+        ],
+        "body": [
+            "task @${1:name}(${2:args}) -> ",
+        ],
+        "description": "Task Arrow"
+    },
+    "Task Statement with Arguments": {
+        "prefix": [
+            "task-arg",
+        ],
+        "body": [
+            "task @${1:name}(${2:args})",
+            "\t$0",
+            "endTask"
+        ],
+        "description": "Task Statement with Arguments"
+    },
+    // class statement
+    "Class Statement": {
+        "prefix": [
+            "class",
+        ],
+        "body": [
+            "class @${1:name}",
+            "\t$0",
+            "endClass"
+        ],
+        "description": "Class Statement"
+    },
+    // for i = 1 to 10 then statement
+    "For-To Loop": {
+        "prefix": [
+            "for-to"
+        ],
+        "body": [
+            "for i = ${1:1} to ${2:n} then",
+            "\t$0",
+            "end"
+        ],
+        "description": "For-To Loop"
+    },
+    // print statement
+    "Print Statement": {
+        "prefix": [
+            "print"
+        ],
+        "body": [
+            "print(${1:text})",
+        ],
+        "description": "Print Statement"
+    },
+    // import statement
+    "Get Statement": {
+        "prefix": [
+            "get"
+        ],
+        "body": [
+            "get {${1:module}} from \"${2:path}\"",
+        ],
+        "description": "Get ... from ..."
+    },
+    // comment
+    "Comment": {
+        "prefix": [
+            "#"
+        ],
+        "body": [
+            "# ${1:comment}",
+        ],
+        "description": "Comment"
+    },
+    // let statement
+    "Let Statement": {
+        "prefix": [
+            "let"
+        ],
+        "body": [
+            "let ${1:name} = \"${2:value}\"",
+        ],
+        "description": "Let Statement"
+    },
+    // final statement
+    "Final Statement": {
+        "prefix": [
+            "final"
+        ],
+        "body": [
+            "final ${1:name} = \"${2:value}\"",
+        ],
+        "description": "Final Statement"
+    },
+}
