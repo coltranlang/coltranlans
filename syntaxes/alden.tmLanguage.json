@@ -34,6 +34,9 @@
 		},
 		{
 			"include": "#identifiers"
+		},
+		{
+			"include": "#escape_chars"
 		}
 	],
 	"repository": {
@@ -47,7 +50,7 @@
 				{
 					"comment": "Keywords",
 					"name": "keyword.control.alden",
-					"match": "\\b(if|elif|else|then|task|endTask|end|class|endClass|for|return|to|continue|while|void|get|from)\\b"
+					"match": "\\b(if|elif|else|then|endIf|task|endTask|object|endObject|class|endClass|def|end|for|endFor|return|break|to|continue|while|void|get|from)\\b"
 				},
 				{
 					"comment": "Conditional operators",
@@ -68,6 +71,11 @@
 					"comment": "Binary literals",
 					"name": "constant.numeric.binary.alden",
 					"match": "0b[01]+"
+				},
+				{
+					"comment": "Object colon",
+					"name": "punctuation.separator.object.alden",
+					"match": ":"
 				},
 				{
 					"comment": "Integer literals",
@@ -94,7 +102,7 @@
 					}
 				},
 				{
-					"comment": "@ operator",
+					"comment": "@ taskname",
 					"name": "keyword.control.alden",
 					"match": "@"
 				},
@@ -231,7 +239,7 @@
 			"patterns": [
 				{
 					"name": "string.quoted.double.alden",
-					"match": "\"(?:\\\\.|[^\\\\\"])*\"",
+					"match": "\\b(\"(?:[^\\\\\"]|\\\\.)*\")\\b",
 					"patterns": [
 						{
 							"name": "constant.character.escape.alden",
@@ -248,6 +256,33 @@
 							"match": "\\\\."
 						}
 					]
+				},
+				{
+					"name": "string.interpolated.alden",
+					"match": "\\b(\\$\\{ )(.+)( \\})\\b",
+					"patterns": [
+						{
+							"name": "meta.expression.interpolated.alden",
+							"match": "\\b(\\$\\{ )(.+)( \\})\\b"
+						}
+					]
+				
+				},
+				{
+					"name": "constant.character.escape.alden",
+					"match": "\\\\."
+				},
+				{
+					"name": "invalid.illegal.newline.alden",
+					"match": "\\n"
+				},
+				{
+					"name": "invalid.illegal.carriage-return.alden",
+					"match": "\\r"
+				},
+				{
+					"name": "invalid.illegal.tab.alden",
+					"match": "\\t"
 				}
 			]
 		},
