@@ -7,7 +7,7 @@
         "body": [
             "task @${1:name}()",
             "\t$0",
-            "endTask"
+            "end"
         ],
         "description": "Task Statement"
     },
@@ -28,9 +28,21 @@
         "body": [
             "task @${1:name}(${2:args})",
             "\t$0",
-            "endTask"
+            "end"
         ],
         "description": "Task Statement with Arguments"
+    },
+    // object statement
+    "Object Statement": {
+        "prefix": [
+            "object",
+        ],
+        "body": [
+            "object ${1:Name}",
+            "\t$0",
+            "end"
+        ],
+        "description": "Object Statement"
     },
     // class statement
     "Class Statement": {
@@ -38,11 +50,23 @@
             "class",
         ],
         "body": [
-            "class @${1:name}",
-            "\t$0",
-            "endClass"
+            "class ${1:Name}()",
+            "\tdef ${1:name}(${2:args})\n\n\tend",
+            "end"
         ],
         "description": "Class Statement"
+    },
+    // def statement
+    "Def Statement": {
+        "prefix": [
+            "def",
+        ],
+        "body": [
+            "def ${1:name}(${2:args})",
+            "\t$0",
+            "end"
+        ],
+        "description": "Def Statement"
     },
     // for i = 1 to 10 then statement
     "For-To Loop": {
@@ -52,7 +76,7 @@
         "body": [
             "for i = ${1:1} to ${2:n} then",
             "\t$0",
-            "endFor"
+            "end"
         ],
         "description": "For-To Loop"
     },
@@ -64,7 +88,7 @@
         "body": [
             "if ${1:condition} then",
             "\t$0",
-            "endIf"
+            "end"
         ],
         "description": "If Statement"
     },
@@ -77,6 +101,16 @@
             "print(${1:text})",
         ],
         "description": "Print Statement"
+    },
+    // println statement
+    "Println Statement": {
+        "prefix": [
+            "println"
+        ],
+        "body": [
+            "println(${1:text})",
+        ],
+        "description": "Println Statement"
     },
     // import statement
     "Get Statement": {
@@ -117,5 +151,25 @@
             "final ${1:name} = \"${2:value}\"",
         ],
         "description": "Final Statement"
+    },
+    // Export statement
+    "Export Statement": {
+        "prefix": [
+            "export"
+        ],
+        "body": [
+            "export ${1:name}",
+        ],
+        "description": "Export Statement"
+    },
+    // Docstring statement
+    "Docstring Statement": {
+        "prefix": [
+            "docstring"
+        ],
+        "body": [
+            "`${1:value}`",
+        ],
+        "description": "Docstring Statement"
     },
 }
