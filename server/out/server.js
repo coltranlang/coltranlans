@@ -1,6 +1,11 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const node_1 = require("vscode-languageserver/node");
+//import vscode = require('vscode');
+const aldenLanguage_json_1 = __importDefault(require("../src/aldenLanguage.json"));
 const vscode_languageserver_textdocument_1 = require("vscode-languageserver-textdocument");
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -10,6 +15,10 @@ const documents = new node_1.TextDocuments(vscode_languageserver_textdocument_1.
 let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
 let hasDiagnosticRelatedInformationCapability = false;
+const keywords = aldenLanguage_json_1.default.keywords;
+const builtIns = aldenLanguage_json_1.default.builtins;
+const builtInModules = aldenLanguage_json_1.default.modules;
+let knownSymbols = [];
 connection.onInitialize((params) => {
     const capabilities = params.capabilities;
     // Does the client support the `workspace/configuration` request?
@@ -24,9 +33,8 @@ connection.onInitialize((params) => {
             textDocumentSync: node_1.TextDocumentSyncKind.Incremental,
             // Tell the client that this server supports code completion.
             completionProvider: {
-                resolveProvider: true,
-                triggerCharacters: ['"', '.', ':']
-            }
+                triggerCharacters: ['.']
+            },
         }
     };
     if (hasWorkspaceFolderCapability) {
@@ -62,25 +70,9 @@ connection.onDidChangeConfiguration(change => {
         documentSettings.clear();
     }
     else {
-        globalSettings = ((change.settings.languageServerExample || defaultSettings));
+        globalSettings = ((change.settings.aldenLanguageServer || defaultSettings));
     }
-    // Revalidate all open text documents
-    documents.all().forEach(validateTextDocument);
 });
-function getDocumentSettings(resource) {
-    if (!hasConfigurationCapability) {
-        return Promise.resolve(globalSettings);
-    }
-    let result = documentSettings.get(resource);
-    if (!result) {
-        result = connection.workspace.getConfiguration({
-            scopeUri: resource,
-            section: 'Alden'
-        });
-        documentSettings.set(resource, result);
-    }
-    return result;
-}
 // Only keep settings for open documents
 documents.onDidClose(e => {
     documentSettings.delete(e.document.uri);
@@ -88,123 +80,151 @@ documents.onDidClose(e => {
 // The content of a text document has changed. This event is emitted
 // when the text document first opened or when its content has changed.
 documents.onDidChangeContent(change => {
-    validateTextDocument(change.document);
-});
-function test() {
-    const text = 'Hello World';
-    const position = { line: 0, character: 0 };
-    console.log(getWordRangeAtPosition(text, position));
-}
-async function validateTextDocument(textDocument) {
-    // In this simple example we get the settings for every validate run.
-    const settings = await getDocumentSettings(textDocument.uri);
-    // The validator creates diagnostics for all uppercase words length 2 and more
-    const text = textDocument.getText();
-    const pattern = /\b[A-Z]{2,}\b/g;
-    let m;
-    let problems = 0;
-    const diagnostics = [];
-    while ((m = pattern.exec(text)) && problems < settings.maxNumberOfProblems) {
-        problems++;
-        const diagnostic = {
-            severity: node_1.DiagnosticSeverity.Warning,
-            range: {
-                start: textDocument.positionAt(m.index),
-                end: textDocument.positionAt(m.index + m[0].length)
-            },
-            message: `${m[0]} is all uppercase.`,
-            source: 'ex'
-        };
-        if (hasDiagnosticRelatedInformationCapability) {
-            diagnostic.relatedInformation = [
-                {
-                    location: {
-                        uri: textDocument.uri,
-                        range: Object.assign({}, diagnostic.range)
-                    },
-                    message: 'Spelling matters'
-                },
-                {
-                    location: {
-                        uri: textDocument.uri,
-                        range: Object.assign({}, diagnostic.range)
-                    },
-                    message: 'Particularly for names'
+    const content = change.document.getText();
+    const matches = content.matchAll(/(?<type>let|final|task|class|get|as|"")\s+(?<name>[a-zA-Z0-9_]+)\s*(?:|{)/g);
+    const symbols = [];
+    const foundSymbols = new Map();
+    for (const match of matches) {
+        const symbol = match.groups;
+        if (symbol && !foundSymbols.has(symbol.name)) {
+            let kind;
+            switch (symbol.type) {
+                case 'get': {
+                    kind = node_1.CompletionItemKind.Module;
+                    break;
                 }
-            ];
+                case 'class': {
+                    kind = node_1.CompletionItemKind.Class;
+                    break;
+                }
+                case 'task': {
+                    kind = node_1.CompletionItemKind.Function;
+                    break;
+                }
+                case 'const': {
+                    kind = node_1.CompletionItemKind.Constant;
+                    break;
+                }
+                default: {
+                    kind = node_1.CompletionItemKind.Variable;
+                }
+            }
+            symbols.push({
+                label: symbol.name,
+                kind: kind,
+            });
+            foundSymbols.set(symbol.name, true);
         }
-        diagnostics.push(diagnostic);
     }
-    // Send the computed diagnostics to VSCode.
-    connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
+    knownSymbols = symbols;
+});
+// TODO: Re-make
+function getPreviousToken(srcline, end) {
+    const re = new RegExp("[$_a-zA-Z][$_a-zA-Z0-9]*", 'g');
+    let found;
+    while ((found = re.exec(srcline)) != null) {
+        const last = found.index + found[0].length;
+        if (last == end) {
+            return found[0];
+        }
+    }
+    return "";
 }
-connection.onDidChangeWatchedFiles(_change => {
-    // Monitored files have change in VSCode
-    connection.console.log('We received an file change event');
-});
-// This handler provides the initial list of the completion items.
-connection.onCompletion((_textDocumentPosition) => {
-    // The pass parameter contains the position of the text document in
-    // which code complete got requested. For the example we ignore this
-    // info and always provide the same completion items.
-    return [
-        {
-            label: 'TypeScript',
-            kind: node_1.CompletionItemKind.Text,
-            data: 1
-        },
-        {
-            label: 'JavaScript',
-            kind: node_1.CompletionItemKind.Text,
-            data: 2
+function findModuleMethods(name) {
+    for (const module of builtInModules) {
+        if (module.name == name) {
+            return module.methods || [];
         }
-    ];
-});
-// This handler resolves additional information for the item selected in
-// the completion list.
-connection.onCompletionResolve((item) => {
-    if (item.data === 1) {
-        item.detail = 'TypeScript details';
-        item.documentation = 'TypeScript documentation';
     }
-    else if (item.data === 2) {
-        item.detail = 'JavaScript details';
-        item.documentation = 'JavaScript documentation';
+    return [];
+}
+function findModulewithVariables(name) {
+    for (const module of builtInModules) {
+        if (module.name == name) {
+            return module.variables || [];
+        }
     }
-    return item;
-});
-const getWordRangeAtPosition = (text, position) => {
-    const wordAtPosition = /(?:\w|[-'])(\w|[-']|$)*/g;
-    wordAtPosition.lastIndex = position.character;
-    const match = wordAtPosition.exec(text);
-    return match
-        ? {
-            start: { line: position.line, character: match.index },
-            end: { line: position.line, character: position.character }
-        } : {
-        start: { line: 0, character: 0 },
-        end: { line: 0, character: 0 }
+    return [];
+}
+function aldenDocumentationMarkdown(documentation) {
+    return {
+        kind: node_1.MarkupKind.Markdown,
+        value: [
+            "```alden",
+            documentation,
+            "```"
+        ].join('\n\n')
     };
-};
-// hover feature
-connection.onHover((textDocumentPosition) => {
-    const document = documents.get(textDocumentPosition.textDocument.uri);
-    if (document) {
-        const position = textDocumentPosition.position;
-        const wordAtPosition = getWordRangeAtPosition(document.getText(), position);
-        if (wordAtPosition) {
-            return {
-                range: wordAtPosition,
-                contents: [
-                    'This is a placeholder hover message.',
-                    'This is a placeholder hover message.',
-                    'This is a placeholder hover message.'
-                ]
-            };
+}
+// This handler provides the initial list of the completion items.
+connection.onCompletion((document) => {
+    var _a, _b;
+    const content = (_a = documents.get(document.textDocument.uri)) === null || _a === void 0 ? void 0 : _a.getText().split("\n")[document.position.line];
+    const position = document.position.character - 1;
+    if (content === undefined) {
+        return [];
+    }
+    switch ((_b = document.context) === null || _b === void 0 ? void 0 : _b.triggerCharacter) {
+        case ".": {
+            const previousToken = getPreviousToken(content, position);
+            const builtInMethods = findModuleMethods(previousToken);
+            const builtInModuleswithVariables = findModulewithVariables(previousToken);
+            if (builtInMethods) {
+                return builtInMethods.map((method) => ({
+                    label: method.name,
+                    kind: node_1.CompletionItemKind.Method,
+                    data: method.name,
+                    detail: method.detail,
+                    documentation: aldenDocumentationMarkdown(method.documentation),
+                }));
+            }
+            if (builtInModuleswithVariables) {
+                return builtInModuleswithVariables.map((variable) => ({
+                    label: variable.name,
+                    kind: node_1.CompletionItemKind.Variable,
+                    data: variable.name,
+                    detail: variable.detail,
+                    documentation: aldenDocumentationMarkdown(variable.documentation),
+                }));
+            }
+            return [];
+        }
+        default: {
+            // if (content.slice(position - 7, position - 1) === "get") {
+            // 	const modules: CompletionItem[] = [];
+            // 	for (const module of builtInModules) {
+            // 		modules.push({
+            // 			label: module.name,
+            // 			kind: CompletionItemKind.Module,
+            // 			detail: module.detail,
+            // 			documentation: aldenDocumentationMarkdown(module.documentation)
+            // 		});
+            // 	}
+            // 	return modules;
+            // }
+            const defaultCompletion = [];
+            for (const keyword of keywords) {
+                defaultCompletion.push({
+                    label: keyword,
+                    kind: node_1.CompletionItemKind.Keyword
+                });
+            }
+            for (const builtIn of builtIns) {
+                defaultCompletion.push({
+                    label: builtIn.name,
+                    kind: node_1.CompletionItemKind.Function,
+                    detail: builtIn.detail,
+                    documentation: aldenDocumentationMarkdown(builtIn.documentation)
+                });
+            }
+            if (knownSymbols !== []) {
+                defaultCompletion.push(...knownSymbols);
+            }
+            return defaultCompletion;
         }
     }
-    return { contents: [] };
 });
+// Make the text document manager listen on the connection
 // for open, change and close text document events
 documents.listen(connection);
 // Listen on the connection

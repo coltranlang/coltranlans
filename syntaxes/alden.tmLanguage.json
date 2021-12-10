@@ -1,5 +1,5 @@
 {
-	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"%schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
 	"name": "alden",
 	"patterns": [
 		{
@@ -12,7 +12,13 @@
 			"include": "#strings"
 		},
 		{
-			"include": "#string-brace-formatting"
+			"include": "#f-string-double"
+		},
+		{
+			"include": "#f-string-single"
+		},
+		{
+			"include": "#f-string-backtick"
 		},
 		{
 			"include": "#variables"
@@ -53,7 +59,7 @@
 				{
 					"comment": "Keywords",
 					"name": "keyword.control.alden",
-					"match": "\\b(if|elif|else|then|endIf|task|endTask|object|endObject|class|endClass|def|end|for|endFor|return|break|to|continue|while|void|get|from|export)\\b"
+					"match": "\\b(if|elif|else|then|endIf|task|endTask|object|module|endObject|class|endClass|def|end|for|endFor|in|as|return|break|to|continue|while|void|get|from|export)\\b"
 				},
 				{
 					"comment": "Object properties",
@@ -63,7 +69,7 @@
 				{
 					"comment": "Format keyword",
 					"name": "keyword.control.format.alden",
-					"match": "\\bfv\\b"
+					"match": "\\bfm\\b"
 				},
 				{
 					"comment": "Format braces",
@@ -132,7 +138,7 @@
 				{
 					"comment": "Getter",
 					"name": "keyword.operator.getter.alden",
-					"match": "\\$"
+					"match": "\\%"
 				},
 				{
 					"comment": "Identifier",
@@ -263,66 +269,456 @@
 				}
 			]
 		},
-		"strings": {
+		
+		"f-string-backtick": {
 			"patterns": [
 				{
-					"name": "string.quoted.double.alden",
-					"match": "\\\"(\\\\.|[^\\\\\"])*\\\"",
-					"patterns": [
-						{
-							"name": "constant.character.escape.alden",
-							"match": "\\\\."
-						}
-					]
+					"include": "#f-string-backtick-call"
 				},
 				{
-					"name": "string.quoted.single.alden",
-					"match": "'(?:\\\\.|[^\\\\'])*'",
-					"patterns": [
-						{
-							"name": "constant.character.escape.alden",
-							"match": "\\\\."
-						}
-					]
-				},
-				{
-					"name":"constant.character.escape.alden",
-					"match":"\\\\(x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4}|U[0-9a-fA-F]{8}|.)"
-				},
-				{
-					"name": "meta.document.expression.alden",
-					"begin": "\\`",
+					"name": "string.f-string-backtick.alden",
+					"begin": "([_%[:alpha:]][_%[:alnum:]]*)?(`)",
 					"beginCaptures": {
-						"0": {
-							"name": "punctuation.definition.template-expression.begin.alden"
+						"1": {
+							"name": "entity.name.function.tagged-f-string-backtick.alden"
+						},
+						"2": {
+							"name": "punctuation.definition.string.f-string-backtick.begin.alden"
 						}
 					},
-					"end": "\\`",
+					"end": "`",
 					"endCaptures": {
 						"0": {
-							"name": "punctuation.definition.template-expression.end.alden"
+							"name": "punctuation.definition.string.f-string-backtick.end.alden"
 						}
-					}
-				},
-				{
-					"name": "constant.character.escape.alden",
-					"match": "\\\\."
-				},
-				{
-					"name": "invalid.illegal.newline.alden",
-					"match": "\\n"
-				},
-				{
-					"name": "invalid.illegal.carriage-return.alden",
-					"match": "\\r"
-				},
-				{
-					"name": "invalid.illegal.tab.alden",
-					"match": "\\t"
+					},
+					"patterns": [
+						{
+							"include": "#f-string-backtick-substitution-element"
+						}
+					]
 				}
 			]
 		},
-		
+		"f-string-backtick-call": {
+			"patterns": [
+				{
+					"name": "string.f-string-backtick.alden",
+					"begin": "(?=(([_%[:alpha:]][_%[:alnum:]]*\\s*\\??\\.\\s*)*|(\\??\\.\\s*)?)([_%[:alpha:]][_%[:alnum:]]*)(<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\`([^\\`\\\\]|\\\\.)*\\`))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>|\\<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\`([^\\`\\\\]|\\\\.)*\\`))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))(([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>|\\<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\`([^\\`\\\\]|\\\\.)*\\`))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>)*(?<!=)\\>))*(?<!=)\\>)*(?<!=)>\\s*)?`)",
+					"end": "(?=`)",
+					"patterns": [
+						{
+							"begin": "(?=(([_%[:alpha:]][_%[:alnum:]]*\\s*\\??\\.\\s*)*|(\\??\\.\\s*)?)([_%[:alpha:]][_%[:alnum:]]*))",
+							"end": "(?=(<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\`([^\\`\\\\]|\\\\.)*\\`))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>|\\<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\`([^\\`\\\\]|\\\\.)*\\`))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))(([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>|\\<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\`([^\\`\\\\]|\\\\.)*\\`))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>)*(?<!=)\\>))*(?<!=)\\>)*(?<!=)>\\s*)?`)",
+							"patterns": [
+								{
+									"include": "#support-function-call-identifiers"
+								},
+								{
+									"name": "entity.name.function.tagged-f-string-backtick.alden",
+									"match": "([_%[:alpha:]][_%[:alnum:]]*)"
+								}
+							]
+						},
+						{
+							"include": "#type-arguments"
+						}
+					]
+				},
+				{
+					"name": "string.f-string-backtick.alden",
+					"begin": "([_%[:alpha:]][_%[:alnum:]]*)?\\s*(?=(<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\`([^\\`\\\\]|\\\\.)*\\`))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>|\\<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\`([^\\`\\\\]|\\\\.)*\\`))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))(([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>|\\<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\`([^\\`\\\\]|\\\\.)*\\`))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>)*(?<!=)\\>))*(?<!=)\\>)*(?<!=)>\\s*)`)",
+					"beginCaptures": {
+						"1": {
+							"name": "entity.name.function.tagged-f-string-backtick.alden"
+						}
+					},
+					"end": "(?=`)",
+					"patterns": [
+						{
+							"include": "#type-arguments"
+						}
+					]
+				}
+			]
+		},
+		"f-string-backtick-substitution-element": {
+			"name": "meta.f-string-backtick.expression.alden",
+			"begin": "\\%\\{",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.f-string-backtick-expression.begin.alden"
+				}
+			},
+			"end": "\\}",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.f-string-backtick-expression.end.alden"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#expression"
+				}
+			],
+			"contentName": "meta.embedded.line.alden"
+		},
+		"f-string-backtick-type": {
+			"patterns": [
+				{
+					"include": "#f-string-backtick-call"
+				},
+				{
+					"name": "string.f-string-backtick.alden",
+					"begin": "([_%[:alpha:]][_%[:alnum:]]*)?(`)",
+					"beginCaptures": {
+						"1": {
+							"name": "entity.name.function.tagged-f-string-backtick.alden"
+						},
+						"2": {
+							"name": "punctuation.definition.string.f-string-backtick.begin.alden"
+						}
+					},
+					"end": "`",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.f-string-backtick.end.alden"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#f-string-backtick-type-substitution-element"
+						},
+						{
+							"include": "#string-character-escape"
+						}
+					]
+				}
+			]
+		},
+		"f-string-backtick-type-substitution-element": {
+			"name": "meta.f-string-backtick.expression.alden",
+			"begin": "\\%\\{",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.f-string-backtick-expression.begin.alden"
+				}
+			},
+			"end": "\\}",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.f-string-backtick-expression.end.alden"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#type"
+				}
+			],
+			"contentName": "meta.embedded.line.alden"
+		},
+		"f-string-double": {
+			"patterns": [
+				{
+					"include": "#f-string-double-call"
+				},
+				{
+					"name": "string.f-string-double.alden",
+					"begin": "([_%[:alpha:]][_%[:alnum:]]*)?(\")",
+					"beginCaptures": {
+						"1": {
+							"name": "entity.name.function.tagged-f-string-double.alden"
+						},
+						"2": {
+							"name": "punctuation.definition.string.f-string-double.begin.alden"
+						}
+					},
+					"end": "\"",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.f-string-double.end.alden"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#f-string-double-substitution-element"
+						}
+					]
+				}
+			]
+		},
+		"f-string-double-call": {
+			"patterns": [
+				{
+					"name": "string.f-string-double.alden",
+					"begin": "(?=(([_%[:alpha:]][_%[:alnum:]]*\\s*\\??\\.\\s*)*|(\\??\\.\\s*)?)([_%[:alpha:]][_%[:alnum:]]*)(<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\\"([^\\\"\\\\]|\\\\.)*\\\"))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>|\\<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\\"([^\\\"\\\\]|\\\\.)*\\\"))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))(([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>|\\<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\\"([^\\\"\\\\]|\\\\.)*\\\"))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>)*(?<!=)\\>))*(?<!=)\\>)*(?<!=)>\\s*)?\")",
+					"end": "(?=\")",
+					"patterns": [
+						{
+							"begin": "(?=(([_%[:alpha:]][_%[:alnum:]]*\\s*\\??\\.\\s*)*|(\\??\\.\\s*)?)([_%[:alpha:]][_%[:alnum:]]*))",
+							"end": "(?=(<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\\"([^\\\"\\\\]|\\\\.)*\\\"))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>|\\<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\\"([^\\\"\\\\]|\\\\.)*\\\"))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))(([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>|\\<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\\"([^\\\"\\\\]|\\\\.)*\\\"))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>)*(?<!=)\\>))*(?<!=)\\>)*(?<!=)>\\s*)?\")",
+							"patterns": [
+								{
+									"include": "#support-function-call-identifiers"
+								},
+								{
+									"name": "entity.name.function.tagged-f-string-double.alden",
+									"match": "([_%[:alpha:]][_%[:alnum:]]*)"
+								}
+							]
+						},
+						{
+							"include": "#type-arguments"
+						}
+					]
+				},
+				{
+					"name": "string.f-string-double.alden",
+					"begin": "([_%[:alpha:]][_%[:alnum:]]*)?\\s*(?=(<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\\"([^\\\"\\\\]|\\\\.)*\\\"))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>|\\<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\\"([^\\\"\\\\]|\\\\.)*\\\"))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))(([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>|\\<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\\"([^\\\"\\\\]|\\\\.)*\\\"))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>)*(?<!=)\\>))*(?<!=)\\>)*(?<!=)>\\s*)\")",
+					"beginCaptures": {
+						"0": {
+							"name": "entity.name.function.tagged-f-string-double.alden"
+						}
+					},
+					"end": "(?=\")",
+					"patterns": [
+						{
+							"include": "#type-arguments"
+						}
+					]
+				}
+			]
+		},
+		"f-string-double-substitution-element": {
+			"name": "meta.f-string-double.expression.alden",
+			"begin": "\\%\\{",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.f-string-double-expression.begin.alden"
+				}
+			},
+			"end": "\\}",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.f-string-double-expression.end.alden"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#expression"
+				}
+			],
+			"contentName": "meta.embedded.line.alden"
+		},
+		"f-string-double-type": {
+			"patterns": [
+				{
+					"include": "#f-string-double-call"
+				},
+				{
+					"name": "string.f-string-double.alden",
+					"begin": "([_%[:alpha:]][_%[:alnum:]]*)?(\")",
+					"beginCaptures": {
+						"1": {
+							"name": "entity.name.function.tagged-f-string-double.alden"
+						},
+						"2": {
+							"name": "punctuation.definition.string.f-string-double.begin.alden"
+						}
+					},
+					"end": "\"\"\"",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.f-string-double.end.alden"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#f-string-double-substitution-element"
+						},
+						{
+							"include": "#string-character-escape"
+						}
+					]
+				}
+			]
+		},
+		"f-string-double-type-substitution-element": {
+			"name": "meta.f-string-double.expression.alden",
+			"begin": "\\%\\{",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.f-string-double-expression.begin.alden"
+				}
+			},
+			"end": "\\}",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.f-string-double-expression.end.alden"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#type"
+				}
+			],
+			"contentName": "meta.embedded.line.alden"
+		},
+		"f-string-single": {
+			"patterns": [
+				{
+					"include": "#f-string-single-call"
+				},
+				{
+					"name": "string.f-string-single.alden",
+					"begin": "([_%[:alpha:]][_%[:alnum:]]*)?(')",
+					"beginCaptures": {
+						"1": {
+							"name": "entity.name.function.tagged-f-string-single.alden"
+						},
+						"2": {
+							"name": "punctuation.definition.string.f-string-single.begin.alden"
+						}
+					},
+					"end": "'",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.f-string-single.end.alden"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#f-string-single-substitution-element"
+						}
+					]
+				}
+			]
+		},
+		"f-string-single-call": {
+			"patterns": [
+				{
+					"name": "string.f-string-single.alden",
+					"begin": "(?=(([_%[:alpha:]][_%[:alnum:]]*\\s*\\??\\.\\s*)*|(\\??\\.\\s*)?)([_%[:alpha:]][_%[:alnum:]]*)(<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\'([^\\'\\\\]|\\\\.)*\\'))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>|\\<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\'([^\\'\\\\]|\\\\.)*\\'))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))(([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>|\\<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\'([^\\'\\\\]|\\\\.)*\\'))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>)*(?<!=)\\>))*(?<!=)\\>)*(?<!=)>\\s*)?')",
+					"end": "(?=')",
+					"patterns": [
+						{
+							"begin": "(?=(([_%[:alpha:]][_%[:alnum:]]*\\s*\\??\\.\\s*)*|(\\??\\.\\s*)?)([_%[:alpha:]][_%[:alnum:]]*))",
+							"end": "(?=(<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\`([^\\`\\\\]|\\\\.)*\\`))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>|\\<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\`([^\\`\\\\]|\\\\.)*\\`))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))(([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>|\\<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\`([^\\`\\\\]|\\\\.)*\\`))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>)*(?<!=)\\>))*(?<!=)\\>)*(?<!=)>\\s*)?`)",
+							"patterns": [
+								{
+									"include": "#support-function-call-identifiers"
+								},
+								{
+									"name": "entity.name.function.tagged-f-string-single.alden",
+									"match": "([_%[:alpha:]][_%[:alnum:]]*)"
+								}
+							]
+						},
+						{
+							"include": "#type-arguments"
+						}
+					]
+				},
+				{
+					"name": "string.f-string-single.alden",
+					"begin": "([_%[:alpha:]][_%[:alnum:]]*)?\\s*(?=(<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\`([^\\`\\\\]|\\\\.)*\\`))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>|\\<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\`([^\\`\\\\]|\\\\.)*\\`))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))(([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>|\\<\\s*(((keyof|infer|typeof|readonly)\\s+)|(([_%[:alpha:]][_%[:alnum:]]*|(\\{([^\\{\\}]|(\\{([^\\{\\}]|\\{[^\\{\\}]*\\})*\\}))*\\})|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(\\[([^\\[\\]]|(\\[([^\\[\\]]|\\[[^\\[\\]]*\\])*\\]))*\\])|(\\'([^\\'\\\\]|\\\\.)*\\')|(\\\"([^\\\"\\\\]|\\\\.)*\\\")|(\\`([^\\`\\\\]|\\\\.)*\\`))(?=\\s*([\\<\\>\\,\\.\\[]|=>|&(?!&)|\\|(?!\\|)))))([^<>\\(]|(\\(([^\\(\\)]|(\\(([^\\(\\)]|\\([^\\(\\)]*\\))*\\)))*\\))|(?<==)\\>)*(?<!=)\\>))*(?<!=)\\>)*(?<!=)>\\s*)`)",
+					"beginCaptures": {
+						"1": {
+							"name": "entity.name.function.tagged-f-string-single.alden"
+						}
+					},
+					"end": "(?=`)",
+					"patterns": [
+						{
+							"include": "#type-arguments"
+						}
+					]
+				}
+			]
+		},
+		"f-string-single-substitution-element": {
+			"patterns": [
+				{
+					"name": "meta.f-string-single.expression.alden",
+					"begin": "\\%\\{",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.f-string-single-expression.begin.alden"
+						}
+					},
+					"end": "\\}",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.f-string-single-expression.end.alden"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#expression"
+						}
+					],
+					"contentName": "meta.embedded.line.alden"
+				}
+			]
+		},
+		"f-string-single-type": {
+			"patterns": [
+				{
+					"include": "#f-string-single-call"
+				},
+				{
+					"name": "string.f-string-single-type.alden",
+					"begin": "([_%[:alpha:]][_%[:alnum:]]*)?(')",
+					"beginCaptures": {
+						"1": {
+							"name": "entity.name.function.tagged-f-string-single.alden"
+						},
+						"2": {
+							"name": "punctuation.definition.string.f-string-single.begin.alden"
+						}
+					},
+					"end": "'",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.string.f-string-single.end.alden"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#f-string-single-substitution-element"
+						},
+						{
+							"include": "#string-character-escape"
+						}
+					]
+				}
+			]
+		},
+		"f-string-single-type-substitution-element": {
+			"patterns": [
+				{
+					"name": "meta.f-string-single.expression.alden",
+					"begin": "\\%\\{",
+					"beginCaptures": {
+						"0": {
+							"name": "punctuation.definition.f-string-single-expression.begin.alden"
+						}
+					},
+					"end": "\\}",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.f-string-single-expression.end.alden"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#type"
+						}
+					],
+					"contentName": "meta.embedded.line.alden"
+				}
+			]
+		},
 		"variables": {
 			"patterns": [
 				{

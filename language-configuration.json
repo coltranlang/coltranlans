@@ -1,8 +1,7 @@
 {
     "comments": {
         // symbol used for single line comment.
-        "lineComment": "#",
-        "color": "#808080"
+        "lineComment": "#"
         
     },
     // symbols used as brackets
@@ -27,20 +26,4 @@
         ["\"", "\""],
         ["'", "'"]
     ],
-    // auto close brackets
-    "autoCloseBrackets": true,
-    // auto complete brackets
-    "autoCompleteBrackets": true,
-    // auto close quotes
-    "autoCloseQuotes": true,
-    // auto complete quotes
-    "autoCompleteQuotes": true,
-    // auto close brackets
-    "autoCloseBraces": true,
-    // auto complete brackets
-    "autoCompleteBraces": true,
-    // auto close strings
-    "autoCloseStrings": true,
-    // auto complete strings
-    "autoCompleteStrings": true,
 }

@@ -4,7 +4,7 @@
     "description": "A feature-rich language support for Alden in VS Code",
     "author": "Kehinde Akinsanya",
     "license": "MIT",
-    "version": "0.2.12",
+    "version": "0.3.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/aldenlang/aldenlans"
@@ -23,20 +23,46 @@
         "vscode": "^1.61.0"
     },
     "activationEvents": [
-        "onLanguage:alden"
+        "onLanguage:alden",
+        "workspaceContains:**/*.alden"
     ],
     "main": "./client/out/extension",
     "contributes": {
+        "configuration": {
+            "type": "object",
+            "title": "Alden LSP",
+            "properties": {
+                "aldenLanguageServer.maxNumberOfProblems": {
+                    "scope": "resource",
+                    "type": "number",
+                    "default": 1000,
+                    "description": "Controls the maximum number of problems that are reported by the server."
+                },
+                "aldenLanguageServer.trace.server": {
+                    "scope": "window",
+                    "type": "string",
+                    "enum": [
+                        "off",
+                        "messages",
+                        "verbose"
+                    ],
+                    "default": "off",
+                    "description": "Controls the tracing of communications between VS Code and the language server."
+                }
+            }
+        },
         "languages": [
             {
                 "id": "alden",
                 "extensions": [
-                    ".alden"
+                    ".alden",
+                    ".aldeni"
                 ],
                 "aliases": [
                     "Alden",
                     "alden"
-                ]
+                ],
+                "configuration": "./language-configuration.json"
             }
         ],
         "snippets": [
@@ -51,23 +77,7 @@
                 "scopeName": "source.alden",
                 "path": "./syntaxes/alden.tmLanguage.json"
             }
-        ],
-        "configuration": {
-            "type": "object",
-            "title": "Example configuration",
-            "properties": {
-                "alden": {
-                    "type": "object",
-                    "title": "Alden",
-                    "properties": {
-                        "hello": {
-                            "type": "string",
-                            "default": "Hello World!"
-                        }
-                    }
-                }
-            }
-        }
+        ]
     },
     "scripts": {
         "vscode:prepublish": "npm run esbuild-base -- --minify",

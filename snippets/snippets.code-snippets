@@ -44,6 +44,18 @@
         ],
         "description": "Object Statement"
     },
+    // module statement
+    "Module Statement": {
+        "prefix": [
+            "module",
+        ],
+        "body": [
+            "module ${1:Export}",
+            "\t$0",
+            "end"
+        ],
+        "description": "Module Statement"
+    },
     // class statement
     "Class Statement": {
         "prefix": [
@@ -80,6 +92,18 @@
         ],
         "description": "For-To Loop"
     },
+    // in statement
+    "In Statement": {
+        "prefix": [
+            "in"
+        ],
+        "body": [
+            "in ${1:names} as ${2:name} then",
+            "\t$0",
+            "end"
+        ],
+        "description": "In Statement"
+    },
     // if statement
     "If Statement": {
         "prefix": [
@@ -91,6 +115,18 @@
             "end"
         ],
         "description": "If Statement"
+    },
+    // match statement
+    "Match Statement": {
+        "prefix": [
+            "match"
+        ],
+        "body": [
+            "match ${1:expression}",
+            "\t$0",
+            "end"
+        ],
+        "description": "Match Statement"
     },
     // print statement
     "Print Statement": {
@@ -118,7 +154,7 @@
             "get"
         ],
         "body": [
-            "get {${1:module}} from \"${2:path}\"",
+            "get ${1:module} from \"${2:path}\"",
         ],
         "description": "Get ... from ..."
     },
@@ -163,13 +199,13 @@
         "description": "Export Statement"
     },
     // Docstring statement
-    "Docstring Statement": {
+    "Documentation Statement": {
         "prefix": [
-            "docstring"
+            "documentation"
         ],
         "body": [
-            "`${1:value}`",
+            "/**\n\t*${1:value}\t\n*/",
         ],
-        "description": "Docstring Statement"
+        "description": "Documentation Statement"
     },
 }

@@ -1,0 +1,435 @@
+{
+	"modules": [
+		{
+			"name": "Math",
+			"documentation": "This module contains methods for basic math operations.",
+			"detail": "(module) Math",
+			"methods": [
+				{
+					"name": "abs",
+					"documentation": "Returns the absolute value of a number.",
+					"detail": "Math.abs(x) -> Number"
+				},
+				{
+					"name": "acos",
+					"documentation": "Returns the arccosine of a number.",
+					"detail": "Math.acos(x) -> Number"
+				},
+				{
+					"name": "asin",
+					"documentation": "Returns the arcsine of a number.",
+					"detail": "Math.asin(x) -> Number"
+				},
+				{
+					"name": "atan",
+					"documentation": "Returns the arctangent of a number.",
+					"detail": "Math.atan(x) -> Number"
+				},
+				{
+					"name": "atan2",
+					"documentation": "Returns the arctangent of the quotient of its arguments.",
+					"detail": "Math.atan2(y, x) -> Number"
+				},
+				{
+					"name": "ceil",
+					"documentation": "Returns the smallest integer greater than or equal to a number.",
+					"detail": "Math.ceil(x) -> Number"
+				},
+				{
+					"name": "cos",
+					"documentation": "Returns the cosine of a number.",
+					"detail": "Math.cos(x) -> Number"
+				},
+				{
+					"name": "exp",
+					"documentation": "Returns the value of E raised to the power of a number.",
+					"detail": "Math.exp(x) -> Number"
+				},
+				{
+					"name": "floor",
+					"documentation": "Returns the largest integer less than or equal to a number.",
+					"detail": "Math.floor(x) -> Number"
+				},
+				{
+					"name": "log",
+					"documentation": "Returns the natural logarithm (base e) of a number.",
+					"detail": "Math.log(x, base) -> Number // base defaults to e"
+				},
+				{
+					"name": "max",
+					"documentation": "Returns the largest of zero or more numbers.",
+					"detail": "Math.max(value1, value2, ...) -> Number"
+				},
+				{
+					"name": "min",
+					"documentation": "Returns the smallest of zero or more numbers.",
+					"detail": "Math.min(value1, value2, ...) -> Number"
+				},
+				{
+					"name": "pow",
+					"documentation": "Returns base to the exponent power, that is, baseexponent.",
+					"detail": "Math.pow(x, y) -> Number"
+				},
+				{
+					"name": "random",
+					"documentation": "Returns a pseudo-random number between 0 (inclusive) and 1 (exclusive).",
+					"detail": "Math.random() -> Number"
+				},
+				{
+					"name": "round",
+					"documentation": "Returns the value of a number rounded to the nearest integer.",
+					"detail": "Math.round(x) -> Number"
+				},
+				{
+					"name": "sin",
+					"documentation": "Returns the sine of a number.",
+					"detail": "Math.sin(x) -> Number"
+				},
+				{
+					"name": "sqrt",
+					"documentation": "Returns the square root of a number.",
+					"detail": "Math.sqrt(x) -> Number"
+				},
+				{
+					"name": "tan",
+					"documentation": "Returns the tangent of a number.",
+					"detail": "Math.tan(x) -> Number"
+				}
+			]
+		},
+		{
+			"name": "System",
+			"documentation": "This module contains methods for system operations.",
+			"detail": "(module) System",
+			"variables": [
+				{
+					"name": "stdin",
+					"documentation": "",
+					"detail": "(variable) stdin",
+					"methods": [
+						{
+							"name": "read",
+							"documentation": "Reads a line from the standard input stream.",
+							"detail": "System.stdin.read() -> String"
+						},
+						{
+							"name": "readLine",
+							"documentation": "Reads a line from the standard input stream.",
+							"detail": "System.stdin.readLine() -> String"
+						}
+					]
+				},
+				{
+					"name": "stdout",
+					"documentation": "Returns the standard output stream.",
+					"detail": "System.stdout -> IO",
+					"methods": [
+						{
+							"name": "write",
+							"documentation": "Writes a string to the standard output stream.",
+							"detail": "System.stdout.write(string) -> Void"
+						},
+						{
+							"name": "writeLine",
+							"documentation": "Writes a string to the  standard output stream with a newline.",
+							"detail": "System.stdout.writeLine(string) -> Void"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Date",
+			"documentation": "This module contains methods for date and time operations.",
+			"detail": "(module) Date",
+			"methods": [
+				{
+					"name": "new",
+					"documentation": "Creates a new Date object.",
+					"detail": "Date.new(year, month, day, hour, minute, second, millisecond) -> Date"
+				},
+				{
+					"name": "now",
+					"documentation": "Returns the current date and time in a human readable format.",
+					"detail": "Date.now() // Mon Jan 01 2001 00:00:00 2000"
+				},
+				{
+					"name": "nowUTC",
+					"documentation": "Returns a string representing the current date and time in UTC.",
+					"detail": "Datetime.nowUTC() // Fri May 29 02:12:32 2020"
+				},
+				{
+					"name": "parse",
+					"documentation": "Parses a string representation of a date and time.",
+					"detail": "Date.parse(string) -> Number"
+				},
+				{
+					"name": "getDay",
+					"documentation": "Returns the day of the week of a date.",
+					"detail": "Date.getDay() // 0 (Sunday) to 6 (Saturday)"
+				},
+				{
+					"name": "getFullYear",
+					"documentation": "Returns the year of a date.",
+					"detail": "Date.getFullYear() // 2020"
+				},
+				{
+					"name": "getHours",
+					"documentation": "Returns the hour of a date.",
+					"detail": "Date.getHours() // 0 to 23"
+				},
+				{
+					"name": "getSeconds",
+					"documentation": "Returns the seconds of a date.",
+					"detail": "Date.getSeconds() // 0 to 59"
+				},
+				{
+					"name": "getMilliseconds",
+					"documentation": "Returns the milliseconds of a date.",
+					"detail": "Date.getMilliseconds() // 0 to 999"
+				},
+				{
+					"name": "getMinutes",
+					"documentation": "Returns the minutes of a date.",
+					"detail": "Date.getMinutes() // 0 to 59"
+				},
+				{
+					"name": "getMonth",
+					"documentation": "Returns the month of a date.",
+					"detail": "Date.getMonth() // 0 to 11"
+				},
+				{
+					"name": "getTime",
+					"documentation": "Returns number of milliseconds since a date.",
+					"detail": "Date.getTime() // 1589788400000"
+				}
+			]
+		},
+		{
+			"name": "Path",
+			"documentation": "This module contains methods for working with file paths.",
+			"detail": "(module) Path",
+			"methods": [
+				{
+					"name": "basename",
+					"documentation": "Returns the basename of the path.",
+					"detail": "Path.basename('/usr/bin')"
+				},
+				{
+					"name": "dirname",
+					"documentation": "Returns the directory name of the path.",
+					"detail": "Path.dirname('/usr/bin')"
+				},
+				{
+					"name": "extname",
+					"documentation": "Returns the extension of the path.",
+					"detail": "Path.extname('/src/main.txt')"
+				},
+				{
+					"name": "isAbsolute",
+					"documentation": "Returns true if the path is absolute.",
+					"detail": "Path.isAbsolute('/usr')"
+				}
+			]
+		},
+		{
+			"name": "Env",
+			"documentation": "This module contains methods for working with environment variables.",
+			"detail": "(module) Env",
+			"methods": [
+				{
+					"name": "get",
+					"documentation": "Returns the value of an environment variable.",
+					"detail": "Env.get('URL')"
+				},
+				{
+					"name": "set",
+					"documentation": "Chanages or adds an environment variable. When setting a variable, the value must be a string. Returns a boolean indicating whether the operation was successful.",
+					"detail": "Env.set('key', 'test')"
+				},
+				{
+					"name": "delete",
+					"documentation": "Deletes an environment variable. Returns a boolean indicating whether the operation was successful.",
+					"detail": "Env.delete('key')"
+				},
+				{
+					"name": "getAll",
+					"documentation": "Returns an object containing all environment variables.",
+					"detail": "Env.getAll()"
+				}
+			]
+		},
+		{
+			"name": "JSON",
+			"documentation": "Module for working with JSON data.",
+			"detail": "(module) JSON",
+			"methods": [
+				{
+					"name": "parse",
+					"documentation": "Parses a JSON string and returns an Alden object.",
+					"detail": "JSON.parse(string)"
+				},
+				{
+					"name": "generate",
+					"documentation": " Generates a JSON string from an Alden object.",
+					"detail": "JSON.generate(object)"
+				}
+			]
+		},
+		{
+			"name": "HTTP",
+			"documentation": "This module contains methods for working with HTTP.",
+			"detail": "(module) HTTP",
+			"methods": [
+				{
+					"name": "get",
+					"documentation": "Sends a HTTP GET request to a given URL. Returns a result object.",
+					"detail": "HTTP.get('https://www.url.com')"
+				},
+				{
+					"name": "post",
+					"documentation": "Sends a HTTP POST request to a given URL. Returns a result object upon success.",
+					"detail": "HTTP.post('https://www.url.com', object')"
+				}
+			]
+		},
+		{
+			"name": "Base64",
+			"documentation": "This module contains methods for working with base64.",
+			"detail": "(module) Base64",
+			"methods": [
+				{
+					"name": "encode",
+					"documentation": "Base64 encode a given string.",
+					"detail": "Base64.encode('This is a test')"
+				},
+				{
+					"name": "decode",
+					"documentation": "Base64 decode a given string.",
+					"detail": "Base64.decode('VGhpcyBpcyBhIHRlc3Q=')"
+				}
+			]
+		},
+		{
+			"name": "Hashlib",
+			"documentation": "Module containing methods for working with different hash algorithms.",
+			"detail": "(module) Hashlib",
+			"methods": [
+				{
+					"name": "sha256",
+					"documentation": "Hashes a given string using the SHA-256 algorithm.",
+					"detail": "Hashlib.sha256('This is a test')"
+				},
+				{
+					"name": "hmac",
+					"documentation": "Generates a HMAC using the SHA-256 algorithm.",
+					"detail": "Hashlib.hmac('secret', 'This is a test')"
+				},
+				{
+					"name": "bcrypt",
+					"documentation": "Generates a bcrypt hash.",
+					"detail": "Hashlib.bcrypt( 'This is a test' )"
+				}
+			]
+		},
+		{
+			"name": "Process",
+			"documentation": "Module containing methods for working with the process.",
+			"detail": "(module) Process",
+			"methods": [
+				{
+					"name": "exec",
+					"documentation": "Executes a given command and returns the result object. Waits for the command to finish before returning.",
+					"detail": "Process.exec(['ls', '-l'])"
+				},
+				{
+					"name": "run",
+					"documentation": "Executes a given command and returns the result object. Does not wait for the command to finish before returning.",
+					"detail": "Process.run(['ls', '-l'])"
+				}
+			]
+		}
+	],
+	"builtins": [
+		{
+			"name": "print",
+			"documentation": "Prints a value to stdout.",
+			"detail": "print(10, 'testing', none, true) // 10, 'test' none, true"
+		},
+		{
+			"name": "println",
+			"documentation": "Prints a value to stdout with a newline.",
+			"detail": "println(10, 'testing', none, true) // 10\ntesting\n none\ntrue"
+		},
+		{
+			"name": "exit",
+			"documentation": "Exits the program.",
+			"detail": "exit()"
+		},
+		{
+			"name": "clear",
+			"documentation": "Clears the screen.",
+			"detail": "clear()"
+		},
+		{
+			"name": "delay",
+			"documentation": "Delay the program for a given amount of milliseconds.",
+			"detail": "delay(1000) // 1 second"
+		},
+		{
+			"name": "input",
+			"documentation": "Retrieves input from stdin and returns value as a string",
+			"detail": "input(\"Enter your name: \") // Optional prompt"
+		},
+		{
+			"name": "typeof",
+			"documentation": "Returns the type of a given value as a string.",
+			"detail": "typeof(10) -> \"int\"\ntypeof(\"test\") -> \"string\"\ntypeof(true) -> \"bool\"\ntypeof(none) -> \"none\""
+		},
+		{
+			"name": "assert",
+			"documentation": "Raise a runtime error if the given expression is not true.",
+			"detail": "assert(10 > 5)"
+		},
+		{
+			"name": "isDefined",
+			"documentation": "Returns a boolean value indicating whether the given value is defined or not.",
+			"detail": "isDefined('test') -> true\nisDefined(none) -> false"
+		}
+	],
+	"keywords" : [
+		"let",
+		"final",
+		"true",
+		"false",
+		"none",
+		"and",
+		"or",
+		"not",
+		"if",
+		"then",
+		"elif",
+		"else",
+		"for",
+		"to",
+		"in",
+		"as",
+		"get",
+		"from",
+		"export",
+		"module",
+		"require",
+		"step",
+		"while",
+		"task",
+		"object",
+		"class",
+		"def",
+		"end",
+		"return",
+		"continue",
+		"break",
+		"fm",
+		"raise"
+	]
+}

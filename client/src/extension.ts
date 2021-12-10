@@ -1,10 +1,11 @@
-
+/* --------------------------------------------------------------------------------------------
+ * Copyright (c) Microsoft Corporation. All rights reserved.
+ * Licensed under the MIT License. See License.txt in the project root for license information.
+ * ------------------------------------------------------------------------------------------ */
 
 import * as path from 'path';
-import * as vscode from 'vscode';
 import { workspace, ExtensionContext } from 'vscode';
-import fileLanguage from './helpers/fileLanguage';
-import message from './helpers/message';
+import vscode = require('vscode');
 import {
 	LanguageClient,
 	LanguageClientOptions,
@@ -13,6 +14,9 @@ import {
 } from 'vscode-languageclient/node';
 
 let client: LanguageClient;
+
+import Language from './language';
+import setHover from './hover';
 
 export function activate(context: ExtensionContext) {
 	// The server is implemented in node
@@ -36,7 +40,7 @@ export function activate(context: ExtensionContext) {
 
 	// Options to control the language client
 	const clientOptions: LanguageClientOptions = {
-		// Register the server for .pear files
+		// Register the server for Alden documents
 		documentSelector: [{ scheme: 'file', language: 'alden' }],
 		synchronize: {
 			// Notify the server about file changes to '.clientrc files contained in the workspace
@@ -46,40 +50,28 @@ export function activate(context: ExtensionContext) {
 
 	// Create the language client and start the client.
 	client = new LanguageClient(
-		'languageServerExample',
-		'Language Server Example',
+		'aldenLanguageServer',
+		'Alden Language Server',
 		serverOptions,
 		clientOptions
 	);
-	// const HoverProvider = () => {
-	// 	return {
-			
-	// 	};
-	// };
-	// const CompletionItemProvider = () => {	
-	// };
-	// hover and completion
-	//vscode.languages.registerHoverProvider(fileLanguage, HoverProvider());
-	const tokenTypes = ['variable', 'function', 'get'];
-	const tokenType = tokenTypes[Math.floor(Math.random() * tokenTypes.length)];
-	const tokenModifiers = ['public', 'private', 'protected'];
-	const legend = new vscode.SemanticTokensLegend(tokenTypes, tokenModifiers);
-	
-	const tokenProvider = () => {
-		return {
-			provideDocumentSemanticTokens(document, token) {
-				const tokensBuilder = new vscode.SemanticTokensBuilder(legend);
-				tokensBuilder.push(
-					new vscode.Range(new vscode.Position(1, 1), new vscode.Position(1, 5)),
-					'get',
-					['public']
-				);
-				return tokensBuilder.build();
-			}
-		};
-	};
 
-	vscode.languages.registerDocumentSemanticTokensProvider(fileLanguage, tokenProvider(), legend);
+
+	vscode.languages.registerHoverProvider('alden', {
+		provideHover(document, position, token) {
+			const getPosition = document.getText(document.getWordRangeAtPosition(position));
+			// remove a comment if it exists and return the content
+			const commentIndex = getPosition.indexOf('#');
+			const name = commentIndex > -1 ? getPosition.substring(0, commentIndex) : getPosition;
+			const module = Language.getModule(name);
+			if (module) {
+				return setHover(module);
+			}
+			return null;
+		}
+	});
+
+	// Start the client. This will also launch the server
 	client.start();
 }
 

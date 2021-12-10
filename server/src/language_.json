@@ -1,0 +1,16 @@
+{
+	"modules": [
+		{
+			"name": "Socket",
+			"detail": "Module containing methods for working with sockets.",
+			"documentation": "",
+			"methods": [
+				{
+					"name": "new",
+					"detail": "Creates a new socket object given a socket type and a host and port.",
+					"documentation": "Socket.new()"
+				}
+			]
+		}
+	]
+}

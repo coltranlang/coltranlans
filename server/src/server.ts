@@ -1,24 +1,33 @@
 import {
 	createConnection,
 	TextDocuments,
-	Diagnostic,
-	DiagnosticSeverity,
 	ProposedFeatures,
 	InitializeParams,
 	DidChangeConfigurationNotification,
 	CompletionItem,
 	CompletionItemKind,
-	TextDocumentPositionParams,
 	TextDocumentSyncKind,
 	InitializeResult,
-	Hover
+	CompletionParams,
+	HoverClientCapabilities,
+	TextDocumentPositionParams,
+	TextEdit,
+	Range,
+	Position,
+	MarkupContent,
+	MarkupKind,
+	InsertTextFormat,
 } from 'vscode-languageserver/node';
 
+//import vscode = require('vscode');
+import aldenLanguage from '../src/aldenLanguage.json';
+
+
 import {
-	Position,
-	Range,
-	TextDocument
+	TextDocument,
 } from 'vscode-languageserver-textdocument';
+
+
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -30,6 +39,41 @@ const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
 let hasDiagnosticRelatedInformationCapability = false;
+
+interface BuiltIns {
+	name: string,
+	documentation: string,
+	detail: string,
+}
+
+interface BuiltInModules {
+	name: string,
+	documentation: string,
+	detail: string,
+	variables?: BuiltInVariables[],
+	methods?: BuiltInModuleMethods[]
+}
+
+
+interface BuiltInVariables {
+	name: string,
+	documentation: string,
+	detail: string,
+	methods?: BuiltInModuleMethods[]
+}
+
+interface BuiltInModuleMethods {
+	name: string,
+	documentation: string
+	detail: string,
+}
+
+
+const keywords: string[] = aldenLanguage.keywords;
+const builtIns: BuiltIns[] = aldenLanguage.builtins;
+const builtInModules: BuiltInModules[] = aldenLanguage.modules;
+
+let knownSymbols: CompletionItem[] = [];
 
 connection.onInitialize((params: InitializeParams) => {
 	const capabilities = params.capabilities;
@@ -53,9 +97,8 @@ connection.onInitialize((params: InitializeParams) => {
 			textDocumentSync: TextDocumentSyncKind.Incremental,
 			// Tell the client that this server supports code completion.
 			completionProvider: {
-				resolveProvider: true,
-				triggerCharacters: ['"', '.', ':']
-			}
+				triggerCharacters: ['.']
+			},
 		}
 	};
 	if (hasWorkspaceFolderCapability) {
@@ -85,7 +128,6 @@ interface ExampleSettings {
 	maxNumberOfProblems: number;
 }
 
-
 // The global settings, used when the `workspace/configuration` request is not supported by the client.
 // Please note that this is not the case when using this server with the client provided in this example
 // but could happen with other clients.
@@ -101,28 +143,10 @@ connection.onDidChangeConfiguration(change => {
 		documentSettings.clear();
 	} else {
 		globalSettings = <ExampleSettings>(
-			(change.settings.languageServerExample || defaultSettings)
+			(change.settings.aldenLanguageServer || defaultSettings)
 		);
 	}
-
-	// Revalidate all open text documents
-	documents.all().forEach(validateTextDocument);
 });
-
-function getDocumentSettings(resource: string): Thenable<ExampleSettings> {
-	if (!hasConfigurationCapability) {
-		return Promise.resolve(globalSettings);
-	}
-	let result = documentSettings.get(resource);
-	if (!result) {
-		result = connection.workspace.getConfiguration({
-			scopeUri: resource,
-			section: 'Alden'
-		});
-		documentSettings.set(resource, result);
-	}
-	return result;
-}
 
 // Only keep settings for open documents
 documents.onDidClose(e => {
@@ -132,140 +156,186 @@ documents.onDidClose(e => {
 // The content of a text document has changed. This event is emitted
 // when the text document first opened or when its content has changed.
 documents.onDidChangeContent(change => {
-	validateTextDocument(change.document);
-});
+	const content = change.document.getText();
+	const matches = content.matchAll(/(?<type>let|final|task|class|get|as|"")\s+(?<name>[a-zA-Z0-9_]+)\s*(?:|{)/g);
+	const symbols: CompletionItem[] = [];
+	const foundSymbols: Map<string, boolean> = new Map();
 
+	for (const match of matches) {
+		const symbol = match.groups;
 
-function test() {
-	const text = 'Hello World';
-	const position = { line: 0, character: 0 };
-	console.log(getWordRangeAtPosition(text, position));
-}
+		if (symbol && !foundSymbols.has(symbol.name)) {
+			let kind;
 
-async function validateTextDocument(textDocument: TextDocument): Promise<void> {
-	// In this simple example we get the settings for every validate run.
-	const settings = await getDocumentSettings(textDocument.uri);
-
-	// The validator creates diagnostics for all uppercase words length 2 and more
-	const text = textDocument.getText();
-	const pattern = /\b[A-Z]{2,}\b/g;
-	let m: RegExpExecArray | null;
-
-	let problems = 0;
-	const diagnostics: Diagnostic[] = [];
-	while ((m = pattern.exec(text)) && problems < settings.maxNumberOfProblems) {
-		problems++;
-		const diagnostic: Diagnostic = {
-			severity: DiagnosticSeverity.Warning,
-			range: {
-				start: textDocument.positionAt(m.index),
-				end: textDocument.positionAt(m.index + m[0].length)
-			},
-			message: `${m[0]} is all uppercase.`,
-			source: 'ex'
-		};
-		if (hasDiagnosticRelatedInformationCapability) {
-			diagnostic.relatedInformation = [
-				{
-					location: {
-						uri: textDocument.uri,
-						range: Object.assign({}, diagnostic.range)
-					},
-					message: 'Spelling matters'
-				},
-				{
-					location: {
-						uri: textDocument.uri,
-						range: Object.assign({}, diagnostic.range)
-					},
-					message: 'Particularly for names'
+			switch (symbol.type) {
+				case 'get': {
+					kind = CompletionItemKind.Module;
+					break;
 				}
-			];
+
+
+				case 'class': {
+					kind = CompletionItemKind.Class;
+					break;
+				}
+
+				case 'task': {
+					kind = CompletionItemKind.Function;
+					break;
+				}
+
+				case 'const': {
+					kind = CompletionItemKind.Constant;
+					break;
+				}
+
+				default: {
+					kind = CompletionItemKind.Variable;
+				}
+			}
+
+			symbols.push({
+				label: symbol.name,
+				kind: kind,
+			});
+
+			foundSymbols.set(symbol.name, true);
 		}
-		diagnostics.push(diagnostic);
 	}
 
-	// Send the computed diagnostics to VSCode.
-	connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
+	knownSymbols = symbols;
+});
+
+// TODO: Re-make
+function getPreviousToken(srcline: string, end: number) {
+	const re = new RegExp("[$_a-zA-Z][$_a-zA-Z0-9]*", 'g');
+	let found;
+	while ((found = re.exec(srcline)) != null) {
+		const last = found.index + found[0].length;
+		if (last == end) {
+			return found[0];
+		}
+	}
+	return "";
 }
 
-connection.onDidChangeWatchedFiles(_change => {
-	// Monitored files have change in VSCode
-	connection.console.log('We received an file change event');
-});
+function findModuleMethods(name: string): BuiltInModuleMethods[] {
+	for (const module of builtInModules) {
+		if (module.name == name) {
+			return module.methods || [];
+		}
+	}
+
+	return [];
+}
+
+function findModulewithVariables(name: string): BuiltInVariables[] {
+	for (const module of builtInModules) {
+		if (module.name == name) {
+			return module.variables || [];
+		}
+	}
+
+	return [];
+}
+
+
+function aldenDocumentationMarkdown(documentation: string): MarkupContent {
+	return {
+		kind: MarkupKind.Markdown,
+		value: [
+			"```alden",
+			documentation,
+			"```"
+		].join('\n\n')
+	};
+}
 
 // This handler provides the initial list of the completion items.
 connection.onCompletion(
-	(_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
-		// The pass parameter contains the position of the text document in
-		// which code complete got requested. For the example we ignore this
-		// info and always provide the same completion items.
-		return [
-			{
-				label: 'TypeScript',
-				kind: CompletionItemKind.Text,
-				data: 1
-			},
-			{
-				label: 'JavaScript',
-				kind: CompletionItemKind.Text,
-				data: 2
-			}
-		];
-	}
-);
+	(document: CompletionParams): CompletionItem[] => {
+		const content = documents.get(document.textDocument.uri)?.getText().split("\n")[document.position.line];
+		const position = document.position.character - 1;
 
-// This handler resolves additional information for the item selected in
-// the completion list.
-connection.onCompletionResolve(
-	(item: CompletionItem): CompletionItem => {
-		if (item.data === 1) {
-			item.detail = 'TypeScript details';
-			item.documentation = 'TypeScript documentation';
-		} else if (item.data === 2) {
-			item.detail = 'JavaScript details';
-			item.documentation = 'JavaScript documentation';
+		if (content === undefined) {
+			return [];
 		}
-		return item;
-	}
-);
 
-const getWordRangeAtPosition = (text: string, position: Position): Range => {
-	const wordAtPosition = /(?:\w|[-'])(\w|[-']|$)*/g;
-	wordAtPosition.lastIndex = position.character;
-	const match = wordAtPosition.exec(text);
-	return match
-		? {
-			start: { line: position.line, character: match.index },
-			end: { line: position.line, character: position.character }
-		} : {
-			start: { line: 0, character: 0 },
-			end: { line: 0, character: 0 }
-		};
-};
+		switch (document.context?.triggerCharacter) {
+			case ".": {
+				const previousToken: string = getPreviousToken(content, position);
+				const builtInMethods: BuiltInModuleMethods[] = findModuleMethods(previousToken);
+				const builtInModuleswithVariables: BuiltInVariables[] = findModulewithVariables(previousToken);
+				if (builtInMethods) {
+					return builtInMethods.map((method) => ({
+						label: method.name,
+						kind: CompletionItemKind.Method,
+						data: method.name,
+						detail: method.detail,
+						documentation: aldenDocumentationMarkdown(method.documentation),
+					}));
+				}
+				if (builtInModuleswithVariables) {
+					return builtInModuleswithVariables.map((variable) => ({
+						label: variable.name,
+						kind: CompletionItemKind.Variable,
+						data: variable.name,
+						detail: variable.detail,
+						documentation: aldenDocumentationMarkdown(variable.documentation),
+					}));
+				}
+				return [];
 
-// hover feature
-connection.onHover(
-	(textDocumentPosition: TextDocumentPositionParams): Hover => {
-		const document = documents.get(textDocumentPosition.textDocument.uri);
-		if (document) {
-			const position = textDocumentPosition.position;
-			const wordAtPosition = getWordRangeAtPosition(document.getText(), position);
-			if (wordAtPosition) {
-				return {
-					range: wordAtPosition,
-					contents: [
-						'This is a placeholder hover message.',
-						'This is a placeholder hover message.',
-						'This is a placeholder hover message.'
-					]
-				};
+			}
+
+			default: {
+				// if (content.slice(position - 7, position - 1) === "get") {
+				// 	const modules: CompletionItem[] = [];
+
+				// 	for (const module of builtInModules) {
+				// 		modules.push({
+				// 			label: module.name,
+				// 			kind: CompletionItemKind.Module,
+				// 			detail: module.detail,
+				// 			documentation: aldenDocumentationMarkdown(module.documentation)
+				// 		});
+				// 	}
+
+				// 	return modules;
+				// }
+
+				const defaultCompletion: CompletionItem[] = [];
+
+				for (const keyword of keywords) {
+					defaultCompletion.push({
+						label: keyword,
+						kind: CompletionItemKind.Keyword
+					});
+				}
+
+				for (const builtIn of builtIns) {
+					defaultCompletion.push({
+						label: builtIn.name,
+						kind: CompletionItemKind.Function,
+						detail: builtIn.detail,
+						documentation: aldenDocumentationMarkdown(builtIn.documentation)
+					});
+				}
+
+
+				if (knownSymbols !== []) {
+					defaultCompletion.push(...knownSymbols);
+				}
+
+				return defaultCompletion;
 			}
 		}
-		return { contents: [] };
 	}
 );
 
+
+
+// Make the text document manager listen on the connection
 // for open, change and close text document events
 documents.listen(connection);
 
