@@ -1,0 +1,28 @@
+class Date(object)
+	def now()
+		return string
+	end
+	def getYear()
+		return number
+	end
+	def getMonth()
+		return number
+	end
+	def getDay()
+		return number
+	end
+	def getHour()
+		return number
+	end
+	def getMinute()
+		return number
+	end
+	def getSecond()
+		return number
+	end
+end
+
+
+Module Export as Date
+    new: Date
+end

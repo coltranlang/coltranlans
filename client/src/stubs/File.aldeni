@@ -1,0 +1,12 @@
+object File
+	open: task (string, string) -> File
+	close: task (File) -> void
+	read: task (File) -> string
+	write: task (File, string) -> void
+end
+
+module Export as File
+    file: File
+end
+
+

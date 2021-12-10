@@ -1,0 +1,13 @@
+class HTTP
+	def get(url)
+		return object
+	end
+	def post(url, data)
+		return "success"
+	end
+end
+
+
+module Export as HTTP
+	new: HTTP
+end

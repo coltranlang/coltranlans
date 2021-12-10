@@ -1,0 +1,15 @@
+object System
+    stdin: object stdin
+        read: task () -> string
+        readLine: task () -> string
+    end
+    stdout: object stdout
+        write: std.write(string)
+        writeLine: std.writeLine(string)
+    end
+    exit: System.exit(number)
+end
+
+module Export as System
+    system: System
+end

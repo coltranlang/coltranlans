@@ -1,6 +1,47 @@
 {
 	"modules": [
 		{
+			"name": "System",
+			"documentation": "This module contains methods for system operations.",
+			"detail": "(module) System",
+			"variables": [
+				{
+					"name": "stdin",
+					"documentation": "",
+					"detail": "(variable) stdin",
+					"methods": [
+						{
+							"name": "read",
+							"documentation": "Reads a line from the standard input stream.",
+							"detail": "System.stdin.read() -> String"
+						},
+						{
+							"name": "readLine",
+							"documentation": "Reads a line from the standard input stream.",
+							"detail": "System.stdin.readLine() -> String"
+						}
+					]
+				},
+				{
+					"name": "stdout",
+					"documentation": "Returns the standard output stream.",
+					"detail": "System.stdout -> IO",
+					"methods": [
+						{
+							"name": "write",
+							"documentation": "Writes a String to the standard output stream.",
+							"detail": "System.stdout.write(String) -> Void"
+						},
+						{
+							"name": "writeLine",
+							"documentation": "Writes a String to the  standard output stream with a newline.",
+							"detail": "System.stdout.writeLine(String) -> Void"
+						}
+					]
+				}
+			]
+		},
+		{
 			"name": "Math",
 			"documentation": "This module contains methods for basic math operations.",
 			"detail": "(module) Math",
@@ -98,54 +139,13 @@
 			]
 		},
 		{
-			"name": "System",
-			"documentation": "This module contains methods for system operations.",
-			"detail": "(module) System",
-			"variables": [
-				{
-					"name": "stdin",
-					"documentation": "",
-					"detail": "(variable) stdin",
-					"methods": [
-						{
-							"name": "read",
-							"documentation": "Reads a line from the standard input stream.",
-							"detail": "System.stdin.read() -> String"
-						},
-						{
-							"name": "readLine",
-							"documentation": "Reads a line from the standard input stream.",
-							"detail": "System.stdin.readLine() -> String"
-						}
-					]
-				},
-				{
-					"name": "stdout",
-					"documentation": "Returns the standard output stream.",
-					"detail": "System.stdout -> IO",
-					"methods": [
-						{
-							"name": "write",
-							"documentation": "Writes a string to the standard output stream.",
-							"detail": "System.stdout.write(string) -> Void"
-						},
-						{
-							"name": "writeLine",
-							"documentation": "Writes a string to the  standard output stream with a newline.",
-							"detail": "System.stdout.writeLine(string) -> Void"
-						}
-					]
-				}
-			]
-		},
-		{
 			"name": "Date",
 			"documentation": "This module contains methods for date and time operations.",
 			"detail": "(module) Date",
 			"methods": [
 				{
 					"name": "new",
-					"documentation": "Creates a new Date object.",
+					"documentation": "Creates a new Date Object.",
 					"detail": "Date.new(year, month, day, hour, minute, second, millisecond) -> Date"
 				},
 				{
@@ -155,13 +155,13 @@
 				},
 				{
 					"name": "nowUTC",
-					"documentation": "Returns a string representing the current date and time in UTC.",
+					"documentation": "Returns a String representing the current date and time in UTC.",
 					"detail": "Datetime.nowUTC() // Fri May 29 02:12:32 2020"
 				},
 				{
 					"name": "parse",
-					"documentation": "Parses a string representation of a date and time.",
-					"detail": "Date.parse(string) -> Number"
+					"documentation": "Parses a String representation of a date and time.",
+					"detail": "Date.parse(String) -> Number"
 				},
 				{
 					"name": "getDay",
@@ -244,7 +244,7 @@
 				},
 				{
 					"name": "set",
-					"documentation": "Chanages or adds an environment variable. When setting a variable, the value must be a string. Returns a boolean indicating whether the operation was successful.",
+					"documentation": "Chanages or adds an environment variable. When setting a variable, the value must be a String. Returns a boolean indicating whether the operation was successful.",
 					"detail": "Env.set('key', 'test')"
 				},
 				{
@@ -254,7 +254,7 @@
 				},
 				{
 					"name": "getAll",
-					"documentation": "Returns an object containing all environment variables.",
+					"documentation": "Returns an Object containing all environment variables.",
 					"detail": "Env.getAll()"
 				}
 			]
@@ -266,13 +266,13 @@
 			"methods": [
 				{
 					"name": "parse",
-					"documentation": "Parses a JSON string and returns an Alden object.",
-					"detail": "JSON.parse(string)"
+					"documentation": "Parses a JSON String and returns an Alden Object.",
+					"detail": "JSON.parse(String)"
 				},
 				{
 					"name": "generate",
-					"documentation": " Generates a JSON string from an Alden object.",
-					"detail": "JSON.generate(object)"
+					"documentation": " Generates a JSON String from an Alden Object.",
+					"detail": "JSON.generate(Object)"
 				}
 			]
 		},
@@ -283,13 +283,13 @@
 			"methods": [
 				{
 					"name": "get",
-					"documentation": "Sends a HTTP GET request to a given URL. Returns a result object.",
+					"documentation": "Sends a HTTP GET request to a given URL. Returns a result Object.",
 					"detail": "HTTP.get('https://www.url.com')"
 				},
 				{
 					"name": "post",
-					"documentation": "Sends a HTTP POST request to a given URL. Returns a result object upon success.",
-					"detail": "HTTP.post('https://www.url.com', object')"
+					"documentation": "Sends a HTTP POST request to a given URL. Returns a result Object upon success.",
+					"detail": "HTTP.post('https://www.url.com', Object')"
 				}
 			]
 		},
@@ -300,12 +300,12 @@
 			"methods": [
 				{
 					"name": "encode",
-					"documentation": "Base64 encode a given string.",
+					"documentation": "Base64 encode a given String.",
 					"detail": "Base64.encode('This is a test')"
 				},
 				{
 					"name": "decode",
-					"documentation": "Base64 decode a given string.",
+					"documentation": "Base64 decode a given String.",
 					"detail": "Base64.decode('VGhpcyBpcyBhIHRlc3Q=')"
 				}
 			]
@@ -317,7 +317,7 @@
 			"methods": [
 				{
 					"name": "sha256",
-					"documentation": "Hashes a given string using the SHA-256 algorithm.",
+					"documentation": "Hashes a given String using the SHA-256 algorithm.",
 					"detail": "Hashlib.sha256('This is a test')"
 				},
 				{
@@ -339,12 +339,12 @@
 			"methods": [
 				{
 					"name": "exec",
-					"documentation": "Executes a given command and returns the result object. Waits for the command to finish before returning.",
+					"documentation": "Executes a given command and returns the result Object. Waits for the command to finish before returning.",
 					"detail": "Process.exec(['ls', '-l'])"
 				},
 				{
 					"name": "run",
-					"documentation": "Executes a given command and returns the result object. Does not wait for the command to finish before returning.",
+					"documentation": "Executes a given command and returns the result Object. Does not wait for the command to finish before returning.",
 					"detail": "Process.run(['ls', '-l'])"
 				}
 			]
@@ -378,13 +378,13 @@
 		},
 		{
 			"name": "input",
-			"documentation": "Retrieves input from stdin and returns value as a string",
+			"documentation": "Retrieves input from stdin and returns value as a String",
 			"detail": "input(\"Enter your name: \") // Optional prompt"
 		},
 		{
 			"name": "typeof",
-			"documentation": "Returns the type of a given value as a string.",
-			"detail": "typeof(10) -> \"int\"\ntypeof(\"test\") -> \"string\"\ntypeof(true) -> \"bool\"\ntypeof(none) -> \"none\""
+			"documentation": "Returns the type of a given value as a String.",
+			"detail": "typeof(10) -> \"int\"\ntypeof(\"test\") -> \"String\"\ntypeof(true) -> \"bool\"\ntypeof(none) -> \"none\""
 		},
 		{
 			"name": "assert",
@@ -422,7 +422,7 @@
 		"step",
 		"while",
 		"task",
-		"object",
+		"Object",
 		"class",
 		"def",
 		"end",

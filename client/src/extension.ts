@@ -6,11 +6,13 @@
 import * as path from 'path';
 import { workspace, ExtensionContext } from 'vscode';
 import vscode = require('vscode');
+
 import {
 	LanguageClient,
 	LanguageClientOptions,
 	ServerOptions,
-	TransportKind
+	TransportKind,
+	DiagnosticRelatedInformation
 } from 'vscode-languageclient/node';
 
 let client: LanguageClient;
@@ -56,21 +58,147 @@ export function activate(context: ExtensionContext) {
 		clientOptions
 	);
 
-
+	// Hover
 	vscode.languages.registerHoverProvider('alden', {
 		provideHover(document, position, token) {
 			const getPosition = document.getText(document.getWordRangeAtPosition(position));
-			// remove a comment if it exists and return the content
 			const commentIndex = getPosition.indexOf('#');
 			const name = commentIndex > -1 ? getPosition.substring(0, commentIndex) : getPosition;
 			const module = Language.getModule(name);
+			const builtIn = Language.getBuiltIn(name);
 			if (module) {
 				return setHover(module);
+			}
+			if (builtIn) {
+				return setHover(builtIn);
 			}
 			return null;
 		}
 	});
-
+	const getSymbolKind = (kind) => {
+		let symbolKind: vscode.SymbolKind;
+		switch (kind) {
+			case 'class':
+				symbolKind = vscode.SymbolKind.Class;
+				break;
+			case 'task':
+				symbolKind = vscode.SymbolKind.Function;
+				break;
+			case 'variable':
+				symbolKind = vscode.SymbolKind.Variable;
+				break;
+			case 'constant':
+				symbolKind = vscode.SymbolKind.Constant;
+				break;
+			default:
+				symbolKind = vscode.SymbolKind.Class;
+		}
+		return symbolKind;
+	};
+	const getComplentionKind = (kind) => {
+		let completionKind: vscode.CompletionItemKind;
+		switch (kind) {
+			case 'class':
+				completionKind = vscode.CompletionItemKind.Class;
+				break;
+			case 'task':
+				completionKind = vscode.CompletionItemKind.Function;
+				break;
+			case 'variable':
+				completionKind = vscode.CompletionItemKind.Variable;
+				break;
+			case 'constant':
+				completionKind = vscode.CompletionItemKind.Constant;
+				break;
+			default:
+				completionKind = vscode.CompletionItemKind.Class;
+		}
+		return completionKind;
+	};
+	// Symbol
+	vscode.languages.registerDocumentSymbolProvider('alden', {
+		provideDocumentSymbols(document, token) {
+			const symbols: vscode.DocumentSymbol[] = [];
+			const modules = Language.getModules();
+			const line = document.lineAt(0);
+			const start = line.range.start;
+			const end = line.range.end;
+			for (const module of modules) {
+				const symbol = new vscode.DocumentSymbol(
+					module.name,
+					module.description,
+					getSymbolKind(module.symbolKind),
+					new vscode.Range(
+						new vscode.Position(start.line, start.character),
+						new vscode.Position(end.line, end.character)
+					),
+					new vscode.Range(
+						new vscode.Position(start.line, start.character),
+						new vscode.Position(end.line, end.character)
+					)
+				);
+				symbols.push(symbol);
+			}
+			return symbols;
+		}
+	});
+	// Go to definition
+	vscode.languages.registerDefinitionProvider('alden', {
+		provideDefinition(document, position, token) {
+			const getPosition = document.getText(document.getWordRangeAtPosition(position));
+			const commentIndex = getPosition.indexOf('#');
+			const name = commentIndex > -1 ? getPosition.substring(0, commentIndex) : getPosition;
+			const module = Language.getModule(name);
+			const line = document.lineAt(0);
+			const start = line.range.start;
+			const end = line.range.end;
+			// This is for testing purposes only
+			const file = vscode.Uri.file(`${process.env.USERPROFILE}\\.vscode\\extensions\\alden.alden-${vscode.extensions.getExtension('alden.alden').packageJSON.version}\\client\\src\\stubs\\${module.name}.aldeni`);
+			if (module) {
+				return [
+					new vscode.Location(
+						file,
+						new vscode.Range(
+							new vscode.Position(start.line, start.character),
+							new vscode.Position(end.line, end.character)
+						)
+					)
+				];
+			}
+			return null;
+		}
+	});
+	// Code completion
+	vscode.languages.registerCompletionItemProvider('alden', {
+		provideCompletionItems(document, position, token) {
+			const getPosition = document.getText(document.getWordRangeAtPosition(position));
+			const commentIndex = getPosition.indexOf('#');
+			const name = commentIndex > -1 ? getPosition.substring(0, commentIndex) : getPosition;
+			const module = Language.getModule(name);
+			const builtIn = Language.getBuiltIn(name);
+			if (module) {
+				const symbolKind = getComplentionKind(module.symbolKind);
+				const completionItem = new vscode.CompletionItem(module.name, symbolKind);
+				completionItem.documentation = module.description;
+				return [completionItem];
+			}
+			if (builtIn) {
+				const symbolKind = getComplentionKind(builtIn.symbolKind);
+				const completionItem = new vscode.CompletionItem(builtIn.name, symbolKind);
+				completionItem.documentation = builtIn.description;
+				return [completionItem];
+			}
+			return null;
+		}
+	});
+	
+	// Diagnostic
+	// vscode.workspace.onDidChangeTextDocument((e) => {
+	// 	if (e.document.languageId === 'alden') {
+	// 		const tokens = e.document.getText();
+	// 		//
+	// 	}
+	// });
 	// Start the client. This will also launch the server
 	client.start();
 }

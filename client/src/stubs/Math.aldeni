@@ -1,0 +1,22 @@
+object Math
+	abs: task (number) -> number
+	acos: task (number) -> number
+	asin: task (number) -> number
+	atan: task (number) -> number
+	atan2: task (number, number) -> number
+	ceil: task (number) -> number
+	cos: task (number) -> number
+	exp: task (number) -> number
+	floor: task (number) -> number
+	log: task (number) -> number
+	max: task (number, number) -> number
+	min: task (number, number) -> number
+	pow: task (number, number) -> number
+	random: task () -> number
+	round: task (number) -> number
+	sin: task (number) -> number
+	sqrt: task (number) -> number
+	tan: task (number) -> number
+end
+
+

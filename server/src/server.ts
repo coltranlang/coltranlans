@@ -17,6 +17,8 @@ import {
 	MarkupContent,
 	MarkupKind,
 	InsertTextFormat,
+	Diagnostic,
+	DiagnosticSeverity,
 } from 'vscode-languageserver/node';
 
 //import vscode = require('vscode');
@@ -333,6 +335,93 @@ connection.onCompletion(
 	}
 );
 
+// error handling
+async function validateTextDocument(textDocument: TextDocument): Promise<void> {
+	const diagnostics: Diagnostic[] = [];
+
+	const content = textDocument.getText();
+	// detect illegal characters in the document e.g semicolons
+	const illegalCharacters = /[;]/;
+	const illegalCharacterMatch = content.match(illegalCharacters);
+	if (illegalCharacterMatch) {
+		for (const illegalCharacter of illegalCharacterMatch) {
+			const illegalCharacterRange = content.indexOf(illegalCharacter);
+			const diagnostic: Diagnostic = {
+				severity: DiagnosticSeverity.Error,
+				range: {
+					start: {
+						line: illegalCharacterRange,
+						character: illegalCharacterRange
+					},
+					end: {
+						line: illegalCharacterRange,
+						character: illegalCharacterRange + 1
+					}
+				},
+				message: `Illegal character unexpected '${illegalCharacter}'`,
+				source: 'alden'
+			};
+			if (hasDiagnosticRelatedInformationCapability) {
+				diagnostic.relatedInformation = [
+					{
+						location: {
+							uri: textDocument.uri,
+							range: {
+								start: {
+									line: illegalCharacterRange,
+									character: illegalCharacterRange
+								},
+								end: {
+									line: illegalCharacterRange,
+									character: illegalCharacterRange + 1
+								}
+							}
+						},
+						message: `Remove ${illegalCharacter}`
+					}
+				];
+			}
+
+			diagnostics.push(diagnostic);
+		}
+		connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
+	}
+	
+	
+	// detect syntax errors and illegal characters e.g ';' '~`
+	// eslint-disable-next-line no-useless-escape
+	// const syntaxErrors = /[^\w\s\(\)\[\]\{\}\+\-\*\/\%\^\&\|\!\=\<\>\~\`\;\,\.]/g;
+	// const syntaxErrorMatch = content.match(syntaxErrors);
+	
+	// if (syntaxErrorMatch) {
+	// 	for (const syntaxError of syntaxErrorMatch) {
+	// 		const syntaxErrorRange = content.indexOf(syntaxError);
+	// 		const diagnostic: Diagnostic = {
+	// 			severity: DiagnosticSeverity.Error,
+	// 			range: {
+	// 				start: {
+	// 					line: syntaxErrorRange,
+	// 					character: syntaxErrorRange
+	// 				},
+	// 				end: {
+	// 					line: syntaxErrorRange,
+	// 					character: syntaxErrorRange + 1
+	// 				}
+	// 			},
+	// 			message: `Syntax error '${syntaxError}'`,
+	// 			source: 'alden'
+	// 		};
+	// 		diagnostics.push(diagnostic);
+	// 	}
+	// 	connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
+	// }
+}
+
+
+
+documents.onDidChangeContent((change) => {
+	validateTextDocument(change.document);
+});
 
 
 // Make the text document manager listen on the connection

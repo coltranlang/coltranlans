@@ -67,6 +67,46 @@
 					"match": "\\b(\\.\\w+)\\b"
 				},
 				{
+					"comment": "Bool type",
+					"name": "support.type.bool.alden",
+					"match": "\\b(bool)\\b"
+				},
+				{
+					"comment": "Number type",
+					"name": "support.type.number.alden",
+					"match": "\\b(number)\\b"
+				},
+				{
+					"comment": "Integer type",
+					"name": "support.type.integer.alden",
+					"match": "\\b(int)\\b"
+				},
+				{
+					"comment": "Float type",
+					"name": "support.type.float.alden",
+					"match": "\\b(float)\\b"
+				},
+				{
+					"comment": "String type",
+					"name": "support.type.string.alden",
+					"match": "\\b(string)\\b"
+				},
+				{
+					"comment": "List type",
+					"name": "support.type.list.alden",
+					"match": "\\b(list)\\b"
+				},
+				{
+					"comment": "Object type",
+					"name": "support.type.object.alden",
+					"match": "\\b(Object)\\b"
+				},
+				{
+					"comment": "Class type",
+					"name": "support.type.class.alden",
+					"match": "\\b(Class)\\b"
+				},
+				{
 					"comment": "Format keyword",
 					"name": "keyword.control.format.alden",
 					"match": "\\bfm\\b"

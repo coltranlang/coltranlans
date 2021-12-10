@@ -1,0 +1,10 @@
+object Path
+    basename: task (string) -> string
+    dirname: task (string) -> string
+    exists: task (string) -> boolean
+end
+
+
+module Export as Path
+    path: Path
+end
