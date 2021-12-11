@@ -1,7 +1,6 @@
 node_modules
 **/.vscode/
 *.vsix
-./alden-js.tmLanguage.json
-./client/out
-./server/out/
-dist
+alden-js.tmLanguage.json
+client/out/*
+server/out/*
