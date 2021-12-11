@@ -118,7 +118,6 @@ documents.onDidChangeContent(change => {
     }
     knownSymbols = symbols;
 });
-// TODO: Re-make
 function getPreviousToken(srcline, end) {
     const re = new RegExp("[$_a-zA-Z][$_a-zA-Z0-9]*", 'g');
     let found;
@@ -229,24 +228,25 @@ async function validateTextDocument(textDocument) {
     const diagnostics = [];
     const content = textDocument.getText();
     // detect illegal characters in the document e.g semicolons
-    const illegalCharacters = /[;]/;
+    const illegalCharacters = /[;~]/g;
     const illegalCharacterMatch = content.match(illegalCharacters);
     if (illegalCharacterMatch) {
         for (const illegalCharacter of illegalCharacterMatch) {
-            const illegalCharacterRange = content.indexOf(illegalCharacter);
+            // get=the line where all the illegal characters are
+            const illegalCharacterLine = content.split("\n").findIndex((line) => line.includes(illegalCharacter));
             const diagnostic = {
                 severity: node_1.DiagnosticSeverity.Error,
                 range: {
                     start: {
-                        line: illegalCharacterRange,
-                        character: illegalCharacterRange
+                        line: illegalCharacterLine,
+                        character: content.split("\n")[illegalCharacterLine].indexOf(illegalCharacter)
                     },
                     end: {
-                        line: illegalCharacterRange,
-                        character: illegalCharacterRange + 1
+                        line: illegalCharacterLine,
+                        character: content.split("\n")[illegalCharacterLine].indexOf(illegalCharacter) + 1
                     }
                 },
-                message: `Illegal character unexpected '${illegalCharacter}'`,
+                message: `Statements must be separated by a newline`,
                 source: 'alden'
             };
             if (hasDiagnosticRelatedInformationCapability) {
@@ -256,16 +256,16 @@ async function validateTextDocument(textDocument) {
                             uri: textDocument.uri,
                             range: {
                                 start: {
-                                    line: illegalCharacterRange,
-                                    character: illegalCharacterRange
+                                    line: illegalCharacterLine,
+                                    character: content.split("\n")[illegalCharacterLine].indexOf(illegalCharacter)
                                 },
                                 end: {
-                                    line: illegalCharacterRange,
-                                    character: illegalCharacterRange + 1
+                                    line: illegalCharacterLine,
+                                    character: content.split("\n")[illegalCharacterLine].indexOf(illegalCharacter) + 1
                                 }
                             }
                         },
-                        message: `Remove ${illegalCharacter}`
+                        message: `'${illegalCharacter}' is not allowed`
                     }
                 ];
             }
@@ -273,32 +273,9 @@ async function validateTextDocument(textDocument) {
         }
         connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
     }
-    // detect syntax errors and illegal characters e.g ';' '~`
-    // eslint-disable-next-line no-useless-escape
-    // const syntaxErrors = /[^\w\s\(\)\[\]\{\}\+\-\*\/\%\^\&\|\!\=\<\>\~\`\;\,\.]/g;
-    // const syntaxErrorMatch = content.match(syntaxErrors);
-    // if (syntaxErrorMatch) {
-    // 	for (const syntaxError of syntaxErrorMatch) {
-    // 		const syntaxErrorRange = content.indexOf(syntaxError);
-    // 		const diagnostic: Diagnostic = {
-    // 			severity: DiagnosticSeverity.Error,
-    // 			range: {
-    // 				start: {
-    // 					line: syntaxErrorRange,
-    // 					character: syntaxErrorRange
-    // 				},
-    // 				end: {
-    // 					line: syntaxErrorRange,
-    // 					character: syntaxErrorRange + 1
-    // 				}
-    // 			},
-    // 			message: `Syntax error '${syntaxError}'`,
-    // 			source: 'alden'
-    // 		};
-    // 		diagnostics.push(diagnostic);
-    // 	}
-    // 	connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
-    // }
+    else {
+        connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
+    }
 }
 documents.onDidChangeContent((change) => {
     validateTextDocument(change.document);

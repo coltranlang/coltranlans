@@ -348,6 +348,33 @@
 					"detail": "Process.run(['ls', '-l'])"
 				}
 			]
+		},
+		{
+			"name": "File",
+			"documentation": "Module containing methods for working with files.",
+			"detail": "(module) File",
+			"methods": [
+				{
+					"name": "read",
+					"documentation": "Reads a file and returns the result as a String.",
+					"detail": "File.read('/path/to/file')"
+				},
+				{
+					"name": "write",
+					"documentation": "Writes a String to a file.",
+					"detail": "File.write('/path/to/file', 'This is a test')"
+				},
+				{
+					"name": "delete",
+					"documentation": "Deletes a file.",
+					"detail": "File.delete('/path/to/file')"
+				},
+				{
+					"name": "exists",
+					"documentation": "Returns a boolean indicating whether the file exists.",
+					"detail": "File.exists('/path/to/file')"
+				}
+			]
 		}
 	],
 	"builtins": [

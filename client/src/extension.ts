@@ -4,6 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as path from 'path';
+import * as fs from 'fs';
 import { workspace, ExtensionContext } from 'vscode';
 import vscode = require('vscode');
 
@@ -154,16 +155,19 @@ export function activate(context: ExtensionContext) {
 			const end = line.range.end;
 			// This is for testing purposes only
 			const file = vscode.Uri.file(`${process.env.USERPROFILE}\\.vscode\\extensions\\alden.alden-${vscode.extensions.getExtension('alden.alden').packageJSON.version}\\client\\src\\stubs\\${module.name}.aldeni`);
-			if (module) {
-				return [
-					new vscode.Location(
-						file,
-						new vscode.Range(
-							new vscode.Position(start.line, start.character),
-							new vscode.Position(end.line, end.character)
+			// check if file exists without using fs.existsSync
+			if (fs.existsSync(file.fsPath)) {
+				if (module) {
+					return [
+						new vscode.Location(
+							file,
+							new vscode.Range(
+								new vscode.Position(start.line, start.character),
+								new vscode.Position(end.line, end.character)
+							)
 						)
-					)
-				];
+					];
+				}
 			}
 			return null;
 		}

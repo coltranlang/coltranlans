@@ -6,6 +6,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deactivate = exports.activate = void 0;
 const path = require("path");
+const fs = require("fs");
 const vscode_1 = require("vscode");
 const vscode = require("vscode");
 const node_1 = require("vscode-languageclient/node");
@@ -43,7 +44,6 @@ function activate(context) {
     vscode.languages.registerHoverProvider('alden', {
         provideHover(document, position, token) {
             const getPosition = document.getText(document.getWordRangeAtPosition(position));
-            // remove a comment if it exists and return the content
             const commentIndex = getPosition.indexOf('#');
             const name = commentIndex > -1 ? getPosition.substring(0, commentIndex) : getPosition;
             const module = language_1.default.getModule(name);
@@ -116,7 +116,6 @@ function activate(context) {
     vscode.languages.registerDefinitionProvider('alden', {
         provideDefinition(document, position, token) {
             const getPosition = document.getText(document.getWordRangeAtPosition(position));
-            // remove a comment if it exists and return the content
             const commentIndex = getPosition.indexOf('#');
             const name = commentIndex > -1 ? getPosition.substring(0, commentIndex) : getPosition;
             const module = language_1.default.getModule(name);
@@ -124,11 +123,14 @@ function activate(context) {
             const start = line.range.start;
             const end = line.range.end;
             // This is for testing purposes only
-            const file = vscode.Uri.file(`${process.env.USERPROFILE}\\.vscode\\extensions\\alden.alden-${vscode.extensions.getExtension('alden.alden').packageJSON.version}\\src\\stubs\\${module.name}.aldeni`);
-            if (module) {
-                return [
-                    new vscode.Location(file, new vscode.Range(new vscode.Position(start.line, start.character), new vscode.Position(end.line, end.character)))
-                ];
+            const file = vscode.Uri.file(`${process.env.USERPROFILE}\\.vscode\\extensions\\alden.alden-${vscode.extensions.getExtension('alden.alden').packageJSON.version}\\client\\src\\stubs\\${module.name}.aldeni`);
+            // check if file exists without using fs.existsSync
+            if (fs.existsSync(file.fsPath)) {
+                if (module) {
+                    return [
+                        new vscode.Location(file, new vscode.Range(new vscode.Position(start.line, start.character), new vscode.Position(end.line, end.character)))
+                    ];
+                }
             }
             return null;
         }
@@ -137,7 +139,6 @@ function activate(context) {
     vscode.languages.registerCompletionItemProvider('alden', {
         provideCompletionItems(document, position, token) {
             const getPosition = document.getText(document.getWordRangeAtPosition(position));
-            // remove a comment if it exists and return the content
             const commentIndex = getPosition.indexOf('#');
             const name = commentIndex > -1 ? getPosition.substring(0, commentIndex) : getPosition;
             const module = language_1.default.getModule(name);
