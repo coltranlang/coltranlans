@@ -73,6 +73,16 @@ export function activate(context: ExtensionContext) {
 			if (builtIn) {
 				return setHover(builtIn);
 			}
+			// show information about the hovered word e.g class Test
+			// def test():
+			//     return "test"
+			// when a user hovers over the word method in the above example the hover shows the return type of the method
+			// if the word is not a method then the hover shows the type of the variable
+			const tokens = document.getText().split('\n');
+			const line = tokens[position.line];
+			const lineIndex = line.indexOf(name);
+			const lineStart = line.substring(0, lineIndex);
+			const lineEnd = line.substring(lineIndex + name.length);
 			return null;
 		}
 	});
@@ -82,7 +92,7 @@ export function activate(context: ExtensionContext) {
 			case 'class':
 				symbolKind = vscode.SymbolKind.Class;
 				break;
-			case 'task':
+			case 'def':
 				symbolKind = vscode.SymbolKind.Function;
 				break;
 			case 'variable':
@@ -102,7 +112,7 @@ export function activate(context: ExtensionContext) {
 			case 'class':
 				completionKind = vscode.CompletionItemKind.Class;
 				break;
-			case 'task':
+			case 'def':
 				completionKind = vscode.CompletionItemKind.Function;
 				break;
 			case 'variable':

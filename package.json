@@ -4,7 +4,7 @@
     "description": "A feature-rich language support for Alden in VS Code",
     "author": "Kehinde Akinsanya",
     "license": "MIT",
-    "version": "0.3.3",
+    "version": "0.3.9",
     "repository": {
         "type": "git",
         "url": "https://github.com/aldenlang/aldenlans"
@@ -17,7 +17,8 @@
     "icon": "images/alden.png",
     "keywords": [
         "alden",
-        "aldenlans"
+        "aldenlans",
+        "ald"
     ],
     "engines": {
         "vscode": "^1.61.0"
@@ -56,6 +57,7 @@
                 "id": "alden",
                 "extensions": [
                     ".alden",
+                    ".ald",
                     ".aldeni"
                 ],
                 "aliases": [

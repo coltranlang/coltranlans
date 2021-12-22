@@ -159,7 +159,7 @@ documents.onDidClose(e => {
 // when the text document first opened or when its content has changed.
 documents.onDidChangeContent(change => {
 	const content = change.document.getText();
-	const matches = content.matchAll(/(?<type>let|final|task|class|get|as|"")\s+(?<name>[a-zA-Z0-9_]+)\s*(?:|{)/g);
+	const matches = content.matchAll(/(?<type>let|final|def|class|get|as|"")\s+(?<name>[a-zA-Z0-9_]+)\s*(?:|{)/g);
 	const symbols: CompletionItem[] = [];
 	const foundSymbols: Map<string, boolean> = new Map();
 
@@ -181,7 +181,7 @@ documents.onDidChangeContent(change => {
 					break;
 				}
 
-				case 'task': {
+				case 'def': {
 					kind = CompletionItemKind.Function;
 					break;
 				}
@@ -395,9 +395,9 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 
 
 
-documents.onDidChangeContent((change) => {
-	validateTextDocument(change.document);
-});
+// documents.onDidChangeContent((change) => {
+// 	validateTextDocument(change.document);
+// });
 
 
 

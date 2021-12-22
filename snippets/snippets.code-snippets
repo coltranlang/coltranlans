@@ -1,36 +1,36 @@
 {
-    // task  statement
-    "Task Statement": {
+    // Def  statement
+    "Def Statement": {
         "prefix": [
-            "task",
+            "def",
         ],
         "body": [
-            "task @${1:name}()",
+            "def @${1:name}()",
             "\t$0",
             "end"
         ],
-        "description": "Task Statement"
+        "description": "Def Statement"
     },
-    // task implicit return statement
-    "Task Arrow": {
+    // def implicit return statement
+    "Def Arrow": {
         "prefix": [
-            "task-arrow",
+            "def-arrow",
         ],
         "body": [
-            "task @${1:name}(${2:args}) -> ",
+            "def @${1:name}(${2:args}) -> ",
         ],
-        "description": "Task Arrow"
+        "description": "Def Arrow"
     },
-    "Task Statement with Arguments": {
+    "Def Statement with Arguments": {
         "prefix": [
-            "task-arg",
+            "def-arg",
         ],
         "body": [
-            "task @${1:name}(${2:args})",
+            "def @${1:name}(${2:args})",
             "\t$0",
             "end"
         ],
-        "description": "Task Statement with Arguments"
+        "description": "Def Statement with Arguments"
     },
     // object statement
     "Object Statement": {
@@ -50,7 +50,7 @@
             "module",
         ],
         "body": [
-            "module ${1:Export}",
+            "module ${1:Export} as ${2:Module}",
             "\t$0",
             "end"
         ],
@@ -62,31 +62,19 @@
             "class",
         ],
         "body": [
-            "class ${1:Name}()",
-            "\tdef ${1:name}(${2:args})\n\n\tend",
+            "class ${1:name}()",
+            "\tdef init(${2:self})\n\n\tend",
             "end"
         ],
         "description": "Class Statement"
     },
-    // def statement
-    "Def Statement": {
-        "prefix": [
-            "def",
-        ],
-        "body": [
-            "def ${1:name}(${2:args})",
-            "\t$0",
-            "end"
-        ],
-        "description": "Def Statement"
-    },
-    // for i = 1 to 10 then statement
+    // for-to statement
     "For-To Loop": {
         "prefix": [
             "for-to"
         ],
         "body": [
-            "for i = ${1:1} to ${2:n} then",
+            "for i = ${1:1} to ${2:n}:",
             "\t$0",
             "end"
         ],
@@ -98,7 +86,7 @@
             "in"
         ],
         "body": [
-            "in ${1:names} as ${2:name} then",
+            "in ${1:names} as ${2:name}:",
             "\t$0",
             "end"
         ],
@@ -110,11 +98,47 @@
             "if"
         ],
         "body": [
-            "if ${1:condition} then",
+            "if ${1:condition}:",
             "\t$0",
             "end"
         ],
         "description": "If Statement"
+    },
+    // while statement
+    "While Statement": {
+        "prefix": [
+            "while"
+        ],
+        "body": [
+            "while ${1:condition}:",
+            "\t$0",
+            "end"
+        ],
+        "description": "While Statement"
+    },
+    // attempt statement
+    "Attempt Statement": {
+        "prefix": [
+            "attempt"
+        ],
+        "body": [
+            "attempt:",
+            "\tcatch ${1:exception}:\n\n\tend",
+            "end"
+        ],
+        "description": "Attempt Statement"
+    },
+    // catch statement
+    "Catch Statement": {
+        "prefix": [
+            "catch"
+        ],
+        "body": [
+            "catch ${1:exception}:",
+            "\t$0",
+            "end"
+        ],
+        "description": "Catch Statement"
     },
     // match statement
     "Match Statement": {
@@ -122,11 +146,24 @@
             "match"
         ],
         "body": [
-            "match ${1:expression}",
-            "\t$0",
+            "match ${1:expression}:",
+            "\tcase ${2:value}:\n\n\tend",
+            "\tdefault:\n\n\tend",
             "end"
         ],
         "description": "Match Statement"
+    },
+    // case statement
+    "Case Statement": {
+        "prefix": [
+            "case"
+        ],
+        "body": [
+            "case ${1:value}:",
+            "\t$0",
+            "end"
+        ],
+        "description": "Case Statement"
     },
     // print statement
     "Print Statement": {

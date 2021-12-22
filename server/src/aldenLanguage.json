@@ -448,7 +448,7 @@
 		"require",
 		"step",
 		"while",
-		"task",
+		"def",
 		"Object",
 		"class",
 		"def",
