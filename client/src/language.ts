@@ -445,13 +445,13 @@ const builtins: BuiltIns_functions[] = [
 		{
 			name: "print",
 			description: "Prints a value to stdout.",
-			detail: "(def)\nprint(values)",
+			detail: "print(values)",
 			symbolKind: 'function'
 		},
 		{
 			name: "println",
 			description: "Prints a value to stdout with a newline.",
-			detail: "(def)\nprintln(values)",
+			detail: "println(values)",
 			symbolKind: 'function'
 		},
 		{
@@ -482,6 +482,12 @@ const builtins: BuiltIns_functions[] = [
 			name: "typeof",
 			description: "Returns the type of a given value as a string.",
 			detail: "typeof(10) -> \"int\"\ntypeof(\"test\") -> \"string\"\ntypeof(true) -> \"bool\"\ntypeof(none) -> \"none\"",
+			symbolKind: 'function'
+		},
+		{
+			name: "isinstanceof",
+			description: "Returns true if the given value is an instance of the given type.",
+			detail: "isinstanceof(name, Person)",
 			symbolKind: 'function'
 		},
 		{

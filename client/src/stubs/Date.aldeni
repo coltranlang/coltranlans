@@ -1,6 +1,6 @@
-class Date(object)
+class Date
 	def now()
-		return string
+		return str
 	end
 	def getYear()
 		return number
@@ -20,9 +20,4 @@ class Date(object)
 	def getSecond()
 		return number
 	end
-end
-
-
-Module Export as Date
-    new: Date
 end

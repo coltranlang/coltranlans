@@ -1,12 +1,13 @@
-object File
-	open: task (string, string) -> File
-	close: task (File) -> void
-	read: task (File) -> string
-	write: task (File, string) -> void
+class File
+    def __@init__(self, file: str, mode: str = "r")
+    end
+	def read(self)
+	end
+    def read(self) 
+    def write(self, data: str)
+	end
+    def seek(self, offset, whence: int = 0)
+    end
+    def close(self)
+    end
 end
-
-module Export as File
-    file: File
-end
-
-

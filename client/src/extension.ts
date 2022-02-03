@@ -59,33 +59,33 @@ export function activate(context: ExtensionContext) {
 		clientOptions
 	);
 
-	// Hover
-	vscode.languages.registerHoverProvider('alden', {
-		provideHover(document, position, token) {
-			const getPosition = document.getText(document.getWordRangeAtPosition(position));
-			const commentIndex = getPosition.indexOf('#');
-			const name = commentIndex > -1 ? getPosition.substring(0, commentIndex) : getPosition;
-			const module = Language.getModule(name);
-			const builtIn = Language.getBuiltIn(name);
-			if (module) {
-				return setHover(module);
-			}
-			if (builtIn) {
-				return setHover(builtIn);
-			}
-			// show information about the hovered word e.g class Test
-			// def test():
-			//     return "test"
-			// when a user hovers over the word method in the above example the hover shows the return type of the method
-			// if the word is not a method then the hover shows the type of the variable
-			const tokens = document.getText().split('\n');
-			const line = tokens[position.line];
-			const lineIndex = line.indexOf(name);
-			const lineStart = line.substring(0, lineIndex);
-			const lineEnd = line.substring(lineIndex + name.length);
-			return null;
-		}
-	});
+	// // Hover
+	// vscode.languages.registerHoverProvider('alden', {
+	// 	provideHover(document, position, token) {
+	// 		const getPosition = document.getText(document.getWordRangeAtPosition(position));
+	// 		const commentIndex = getPosition.indexOf('#');
+	// 		const name = commentIndex > -1 ? getPosition.substring(0, commentIndex) : getPosition;
+	// 		const module = Language.getModule(name);
+	// 		const builtIn = Language.getBuiltIn(name);
+	// 		if (module) {
+	// 			return setHover(module);
+	// 		}
+	// 		if (builtIn) {
+	// 			return setHover(builtIn);
+	// 		}
+	// 		// show information about the hovered word e.g class Test
+	// 		// def test():
+	// 		//     return "test"
+	// 		// when a user hovers over the word method in the above example the hover shows the return type of the method
+	// 		// if the word is not a method then the hover shows the type of the variable
+	// 		const tokens = document.getText().split('\n');
+	// 		const line = tokens[position.line];
+	// 		const lineIndex = line.indexOf(name);
+	// 		const lineStart = line.substring(0, lineIndex);
+	// 		const lineEnd = line.substring(lineIndex + name.length);
+	// 		return null;
+	// 	}
+	// });
 	const getSymbolKind = (kind) => {
 		let symbolKind: vscode.SymbolKind;
 		switch (kind) {

@@ -1,6 +1,6 @@
 {
-    // Def  statement
-    "Def Statement": {
+    // Function  statement
+    "Function Statement": {
         "prefix": [
             "def",
         ],
@@ -9,19 +9,19 @@
             "\t$0",
             "end"
         ],
-        "description": "Def Statement"
+        "description": "Function Statement"
     },
     // def implicit return statement
-    "Def Arrow": {
+    "Function Arrow": {
         "prefix": [
             "def-arrow",
         ],
         "body": [
             "def @${1:name}(${2:args}) -> ",
         ],
-        "description": "Def Arrow"
+        "description": "Function Arrow"
     },
-    "Def Statement with Arguments": {
+    "Function Statement with Arguments": {
         "prefix": [
             "def-arg",
         ],
@@ -30,7 +30,18 @@
             "\t$0",
             "end"
         ],
-        "description": "Def Statement with Arguments"
+        "description": "Function Statement with Arguments"
+    },
+    "Function Annonymous": {
+        "prefix": [
+            "def-anon",
+        ],
+        "body": [
+            "def ${1:name}(${2:args})",
+            "\t$0",
+            "end"
+        ],
+        "description": "Function Annonymous"
     },
     // object statement
     "Object Statement": {
@@ -62,7 +73,7 @@
             "class",
         ],
         "body": [
-            "class ${1:name}()",
+            "class ${1:Name}()",
             "\tdef init(${2:self})\n\n\tend",
             "end"
         ],
@@ -104,6 +115,28 @@
         ],
         "description": "If Statement"
     },
+    // else if statement
+    "Else If Statement": {
+        "prefix": [
+            "elif"
+        ],
+        "body": [
+            "elif ${1:condition}:",
+            "\t$0",
+        ],
+        "description": "Else If Statement"
+    },
+    // else statement
+    "Else Statement": {
+        "prefix": [
+            "else"
+        ],
+        "body": [
+            "else:",
+            "\t$0",
+        ],
+        "description": "Else Statement"
+    },
     // while statement
     "While Statement": {
         "prefix": [
@@ -123,7 +156,7 @@
         ],
         "body": [
             "attempt:",
-            "\tcatch ${1:exception}:\n\n\tend",
+            "\ncatch ${1:Exception}:\n\t$0",
             "end"
         ],
         "description": "Attempt Statement"
@@ -135,10 +168,20 @@
         ],
         "body": [
             "catch ${1:exception}:",
-            "\t$0",
-            "end"
+            "\t$0"
         ],
         "description": "Catch Statement"
+    },
+    // finally statement
+    "Finally Statement": {
+        "prefix": [
+            "finally"
+        ],
+        "body": [
+            "finally:",
+            "\t$0",
+        ],
+        "description": "Finally Statement"
     },
     // match statement
     "Match Statement": {
@@ -186,14 +229,14 @@
         "description": "Println Statement"
     },
     // import statement
-    "Get Statement": {
+    "Import Statement": {
         "prefix": [
-            "get"
+            "import"
         ],
         "body": [
-            "get ${1:module} from \"${2:path}\"",
+            "import ${1:module} from \"${2:path}\"",
         ],
-        "description": "Get ... from ..."
+        "description": "import ... from ..."
     },
     // comment
     "Comment": {
@@ -225,6 +268,7 @@
         ],
         "description": "Final Statement"
     },
+    
     // Export statement
     "Export Statement": {
         "prefix": [

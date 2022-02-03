@@ -1,22 +1,22 @@
 object Math
-	abs: task (number) -> number
-	acos: task (number) -> number
-	asin: task (number) -> number
-	atan: task (number) -> number
-	atan2: task (number, number) -> number
-	ceil: task (number) -> number
-	cos: task (number) -> number
-	exp: task (number) -> number
-	floor: task (number) -> number
-	log: task (number) -> number
-	max: task (number, number) -> number
-	min: task (number, number) -> number
-	pow: task (number, number) -> number
-	random: task () -> number
-	round: task (number) -> number
-	sin: task (number) -> number
-	sqrt: task (number) -> number
-	tan: task (number) -> number
+	abs: def (x: number) -> number
+	acos: def (x: number) -> number
+	asin: def (x: number) -> number
+	atan: def (x: number) -> number
+	atan2: def (x: number, y: number) -> number
+	ceil: def (x: number) -> number
+	cos: def (x: number) -> number
+	exp: def (x: number) -> number
+	floor: def (x: number) -> number
+	log: def (x: number) -> number
+	max: def (x: number, y: number) -> number
+	min: def (x: number, y: number) -> number
+	pow: def (x: number, y: number) -> number
+	random: def () -> number
+	round: def (x: number) -> number
+	sin: def (x: number) -> number
+	sqrt: def (x: number) -> number
+	tan: def (x: number) -> number
 end
 
 

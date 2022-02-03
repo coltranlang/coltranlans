@@ -62,52 +62,99 @@
 				{
 					"comment": "Keywords",
 					"name": "keyword.control.alden",
-					"match": "\\b(if|elif|else|then|while|object|module|class|def|end|for|in|as|return|break|to|continue|yeild|void|get|from|export|attempt|catch|match|case|default|not|notin|and|or|raise)\\b"
+					"match": "\\b(if|elif|else|then|while|object|module|class|def|end|for|in|as|return|break|to|continue|yeild|void|import|from|export|attempt|catch|finally|match|case|default|not|notin|and|or|raise|freeze)\\b"
+				},
+				{
+					"comment": "let variable keyword",
+					"name": "keyword.control.let.alden",
+					"begin": "\\b(let)\\b",
+					"end": "\\s",
+					"patterns": [
+						{
+							"include": "#identifiers"
+						}
+					]
+				},
+				{
+					"comment": "final constant keyword",
+					"name": "keyword.control.final.alden",
+					"match": "\\b(final)\\b"
+				},
+				{
+					"comment": "Boolean type",
+					"name": "keyword.operator.logical.alden",
+					"match": "\\b(bool)\\b"
+				},
+				{
+					"comment": "Int type",
+					"name": "keyword.operator.logical.alden",
+					"match": "\\b(int)\\b"
+				},
+				{
+					"comment": "Float type",
+					"name": "keyword.operator.logical.alden",
+					"match": "\\b(float)\\b"
+				},
+				{
+					"comment": "Binary type",
+					"name": "keyword.operator.logical.alden",
+					"match": "\\b(bytes)\\b"
+				},
+				{
+					"comment": "String type",
+					"name": "keyword.operator.logical.alden",
+					"match": "\\b(str)\\b"
+				},
+				{
+					"comment": "List type",
+					"name": "keyword.operator.logical.alden",
+					"match": "\\b(list)\\b"
+				},
+				{
+					"comment": "Pair type",
+					"name": "keyword.operator.logical.alden",
+					"match": "\\b(pair)\\b"
+				},
+				{
+					"comment": "Dict type",
+					"name": "keyword.operator.logical.alden",
+					"match": "\\b(dict)\\b"
+				},
+				{
+					"comment": "Char type",
+					"name": "keyword.operator.logical.alden",
+					"match": "\\b(chr)\\b"
+				},
+				{
+					"comment": "Ord type",
+					"name": "keyword.operator.logical.alden",
+					"match": "\\b(ord)\\b"
+				},
+				{
+					"comment": "Object type",
+					"name": "keyword.operator.logical.alden",
+					"match": "\\b(obj)\\b"
+				},
+				{
+					"comment": "BuiltIn type",
+					"name": "keyword.operator.logical.alden",
+					"match": "\\b(builtin)\\b"
+				},
+				{
+					"comment": "special variable",
+					"name": "keyword.operator.logical.alden",
+					"match": "\\b__@([a-zA-Z_][a-zA-Z0-9_]*)__([a-zA-Z_][a-zA-Z0-9__]*)?\\b"
+				},
+				
+				{
+					"comment": "@",
+					"name": "keyword.control.alden",
+					"match": "@"
 				},
 				{
 					"comment": "Object properties",
 					"name": "entity.name.type.object.property.alden",
 					"match": "\\b(\\.\\w+)\\b"
-				},
-				{
-					"comment": "Bool type",
-					"name": "support.type.bool.alden",
-					"match": "\\b(bool)\\b"
-				},
-				{
-					"comment": "Number type",
-					"name": "support.type.number.alden",
-					"match": "\\b(number)\\b"
-				},
-				{
-					"comment": "Integer type",
-					"name": "support.type.integer.alden",
-					"match": "\\b(int)\\b"
-				},
-				{
-					"comment": "Float type",
-					"name": "support.type.float.alden",
-					"match": "\\b(float)\\b"
-				},
-				{
-					"comment": "String type",
-					"name": "support.type.string.alden",
-					"match": "\\b(string)\\b"
-				},
-				{
-					"comment": "List type",
-					"name": "support.type.list.alden",
-					"match": "\\b(list)\\b"
-				},
-				{
-					"comment": "Object type",
-					"name": "support.type.object.alden",
-					"match": "\\b(Object)\\b"
-				},
-				{
-					"comment": "Class type",
-					"name": "support.type.class.alden",
-					"match": "\\b(Class)\\b"
 				},
 				{
 					"comment": "Format keyword",
@@ -404,7 +451,7 @@
 					"include": "#expression"
 				}
 			],
-			"contentName": "meta.embedded.line.alden"
+			"contentName": "variable.other.f-string-backtick-expression.alden"
 		},
 		"f-string-backtick-type": {
 			"patterns": [
@@ -458,7 +505,7 @@
 					"include": "#type"
 				}
 			],
-			"contentName": "meta.embedded.line.alden"
+			"contentName": "variable.other.f-string-backtick-expression.alden"
 		},
 		"f-string-double": {
 			"patterns": [
@@ -551,7 +598,7 @@
 					"include": "#expression"
 				}
 			],
-			"contentName": "meta.embedded.line.alden"
+			"contentName": "variable.other.f-string-double.expression.alden"
 		},
 		"f-string-double-type": {
 			"patterns": [
@@ -605,7 +652,7 @@
 					"include": "#type"
 				}
 			],
-			"contentName": "meta.embedded.line.alden"
+			"contentName": "variable.other.f-string-double.expression.alden"
 		},
 		"f-string-single": {
 			"patterns": [
@@ -700,7 +747,7 @@
 							"include": "#expression"
 						}
 					],
-					"contentName": "meta.embedded.line.alden"
+					"contentName": "variable.other.f-string-single-expression.alden"
 				}
 			]
 		},
@@ -758,7 +805,7 @@
 							"include": "#type"
 						}
 					],
-					"contentName": "meta.embedded.line.alden"
+					"contentName": "variable.other.f-string-single-expression.alden"
 				}
 			]
 		},

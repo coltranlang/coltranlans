@@ -1,7 +1,8 @@
 import {Hover, MarkdownString } from 'vscode';
-const setHover = ({ name, description, detail }: { name: string, description: string, detail: string }) => {
+const setHover = ({ name, description, detail, symbolKind }: { name: string, description: string, detail: string, symbolKind: string }) => {
 	const markdown = new MarkdownString();
 	const code: any = detail;
+	markdown.appendMarkdown(`(${symbolKind})`);
 	markdown.appendCodeblock(code, 'alden');
 	markdown.appendMarkdown("---\n");
 	markdown.appendText(description);
