@@ -1,15 +1,15 @@
-# AldenLans
+# Coltran Language Server (Coltranlans)
 
 
-A feature-rich language support for Alden in VS Code
+A feature-rich language support for Coltran in VS Code
 
 
 ## Features
 
-* [Syntax Highlighting]("https://aldenlang.org/guide/syntax-highlighting")
-* [Snippets]("https://aldenlang.org/guide/snippets")
-* [Formatting]("https://aldenlang.org/guide/formatting")
-* [Code Completion]("https://aldenlang.org/guide/code-completion")
+* [Syntax Highlighting]("https://coltranlang.org/guide/syntax-highlighting")
+* [Snippets]("https://coltranlang.org/guide/snippets")
+* [Formatting]("https://coltranlang.org/guide/formatting")
+* [Code Completion]("https://coltranlang.org/guide/code-completion")
 
 ### Syntax highlighting
 
