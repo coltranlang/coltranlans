@@ -246,158 +246,15 @@ function aldenDocumentationMarkdown(documentation: string): MarkupContent {
 	return {
 		kind: MarkupKind.Markdown,
 		value: [
-			"```alden",
+			"```coltran",
 			documentation,
 			"```"
 		].join('\n\n')
 	};
 }
 
-// This handler provides the initial list of the completion items.
-connection.onCompletion(
-	(document: CompletionParams): CompletionItem[] => {
-		const content = documents.get(document.textDocument.uri)?.getText().split("\n")[document.position.line];
-		const position = document.position.character - 1;
-
-		if (content === undefined) {
-			return [];
-		}
-
-		switch (document.context?.triggerCharacter) {
-			case ".": {
-				const previousToken: string = getPreviousToken(content, position);
-				const builtInMethods: BuiltInModuleMethods[] = findModuleMethods(previousToken);
-				const builtInModuleswithVariables: BuiltInVariables[] = findModulewithVariables(previousToken);
-				if (builtInMethods) {
-					return builtInMethods.map((method) => ({
-						label: method.name,
-						kind: CompletionItemKind.Method,
-						data: method.name,
-						detail: method.detail,
-						documentation: aldenDocumentationMarkdown(method.documentation),
-					}));
-				}
-				if (builtInModuleswithVariables) {
-					return builtInModuleswithVariables.map((variable) => ({
-						label: variable.name,
-						kind: CompletionItemKind.Variable,
-						data: variable.name,
-						detail: variable.detail,
-						documentation: aldenDocumentationMarkdown(variable.documentation),
-					}));
-				}
-				return [];
-
-			}
-
-			default: {
-				// if (content.slice(position - 7, position - 1) === "get") {
-				// 	const modules: CompletionItem[] = [];
-
-				// 	for (const module of builtInModules) {
-				// 		modules.push({
-				// 			label: module.name,
-				// 			kind: CompletionItemKind.Module,
-				// 			detail: module.detail,
-				// 			documentation: aldenDocumentationMarkdown(module.documentation)
-				// 		});
-				// 	}
-
-				// 	return modules;
-				// }
-
-				const defaultCompletion: CompletionItem[] = [];
-
-				for (const keyword of keywords) {
-					defaultCompletion.push({
-						label: keyword,
-						kind: CompletionItemKind.Keyword
-					});
-				}
-
-				for (const builtIn of builtIns) {
-					defaultCompletion.push({
-						label: builtIn.name,
-						kind: CompletionItemKind.Function,
-						detail: builtIn.detail,
-						documentation: aldenDocumentationMarkdown(builtIn.documentation)
-					});
-				}
 
 
-				if (knownSymbols !== []) {
-					defaultCompletion.push(...knownSymbols);
-				}
-
-				return defaultCompletion;
-			}
-		}
-	}
-);
-
-// error handling
-async function validateTextDocument(textDocument: TextDocument): Promise<void> {
-	const diagnostics: Diagnostic[] = [];
-
-	const content = textDocument.getText();
-	// detect illegal characters in the document e.g semicolons
-	const illegalCharacters = /[;~]/g;
-	const illegalCharacterMatch = content.match(illegalCharacters);
-	if (illegalCharacterMatch) {
-		for (const illegalCharacter of illegalCharacterMatch) {
-			// get=the line where all the illegal characters are
-			const illegalCharacterLine = content.split("\n").findIndex((line) => line.includes(illegalCharacter));
-			const diagnostic: Diagnostic = {
-				severity: DiagnosticSeverity.Error,
-				range: {
-					start: {
-						line: illegalCharacterLine,
-						character: content.split("\n")[illegalCharacterLine].indexOf(illegalCharacter)
-					},
-					end: {
-						line: illegalCharacterLine,
-						character: content.split("\n")[illegalCharacterLine].indexOf(illegalCharacter) + 1
-					}
-				},
-				message: `Statements must be separated by a newline`,
-				source: 'alden'
-			};
-			if (hasDiagnosticRelatedInformationCapability) {
-				diagnostic.relatedInformation = [
-					{
-						location: {
-							uri: textDocument.uri,
-							range: {
-								start: {
-									line: illegalCharacterLine,
-									character: content.split("\n")[illegalCharacterLine].indexOf(illegalCharacter)
-								},
-								end: {
-									line: illegalCharacterLine,
-									character: content.split("\n")[illegalCharacterLine].indexOf(illegalCharacter) + 1
-								}
-							}
-						},
-						message: `'${illegalCharacter}' is not allowed`
-					}
-				];
-			}
-
-			
-			diagnostics.push(diagnostic);
-
-		}
-		connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
-	} else {
-		connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
-	}	
-}
-
-
-
-// documents.onDidChangeContent((change) => {
-// 	validateTextDocument(change.document);
-// });
 
 
 

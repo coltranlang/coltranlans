@@ -266,12 +266,12 @@
 			"methods": [
 				{
 					"name": "parse",
-					"documentation": "Parses a JSON String and returns an Alden Object.",
+					"documentation": "Parses a JSON String and returns an Coltran Object.",
 					"detail": "JSON.parse(String)"
 				},
 				{
 					"name": "generate",
-					"documentation": " Generates a JSON String from an Alden Object.",
+					"documentation": " Generates a JSON String from an Coltran Object.",
 					"detail": "JSON.generate(Object)"
 				}
 			]

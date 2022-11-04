@@ -1,6 +1,5 @@
 # Coltran Language Server (Coltranlans)
 
-
 A feature-rich language support for Coltran in VS Code
 
 
@@ -19,10 +18,10 @@ A feature-rich language support for Coltran in VS Code
 <em>(Syntax highlighting)</em>
 </p>
 
-### Auto Completion
+<!-- ### Auto Completion
 
 <p align=center>
 <img src="images/auto_completion.png" width=75%>
 <br/>
 <em>(Auto Completion)</em>
-</p>
+</p> -->

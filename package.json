@@ -1,45 +1,45 @@
 {
-    "name": "alden",
-    "displayName": "Alden",
-    "description": "A feature-rich language support for Alden in VS Code",
+    "name": "coltran",
+    "displayName": "Coltran",
+    "description": "A feature-rich language support for Coltran in VS Code",
     "author": "Kehinde Akinsanya",
     "license": "MIT",
-    "version": "0.4.9",
+    "version": "1.0.0",
     "repository": {
         "type": "git",
-        "url": "https://github.com/aldenlang/aldenlans"
+        "url": "https://github.com/coltranlang/coltranlans"
     },
-    "publisher": "alden",
+    "publisher": "coltran",
     "categories": [
         "Programming Languages",
         "Snippets"
     ],
-    "icon": "images/alden.png",
+    "icon": "images/coltran.png",
     "keywords": [
-        "alden",
-        "aldenlans",
-        "ald"
+        "coltran",
+        "coltranlans",
+        "coltranlang"
     ],
     "engines": {
         "vscode": "^1.61.0"
     },
     "activationEvents": [
-        "onLanguage:alden",
-        "workspaceContains:**/*.alden"
+        "onLanguage:coltran",
+        "workspaceContains:**/*.coltran"
     ],
     "main": "./client/out/extension",
     "contributes": {
         "configuration": {
             "type": "object",
-            "title": "Alden LSP",
+            "title": "Coltran LSP",
             "properties": {
-                "aldenLanguageServer.maxNumberOfProblems": {
+                "coltranlanguageServer.maxNumberOfProblems": {
                     "scope": "resource",
                     "type": "number",
                     "default": 1000,
                     "description": "Controls the maximum number of problems that are reported by the server."
                 },
-                "aldenLanguageServer.trace.server": {
+                "coltranlanguageServer.trace.server": {
                     "scope": "window",
                     "type": "string",
                     "enum": [
@@ -54,30 +54,31 @@
         },
         "languages": [
             {
-                "id": "alden",
+                "id": "coltran",
                 "extensions": [
-                    ".alden",
-                    ".ald",
-                    ".aldeni"
+                    ".coltran",
+                    ".ctrn",
+                    ".ct",
+                    ".ctn"
                 ],
                 "aliases": [
-                    "Alden",
-                    "alden"
+                    "Coltran",
+                    "coltran"
                 ],
                 "configuration": "./language-configuration.json"
             }
         ],
         "snippets": [
             {
-                "language": "alden",
+                "language": "coltran",
                 "path": "./snippets/snippets.code-snippets"
             }
         ],
         "grammars": [
             {
-                "language": "alden",
-                "scopeName": "source.alden",
-                "path": "./syntaxes/alden.tmLanguage.json"
+                "language": "coltran",
+                "scopeName": "source.coltran",
+                "path": "./syntaxes/coltran.tmLanguage.json"
             }
         ]
     },

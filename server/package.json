@@ -1,6 +1,6 @@
 {
-	"name": "alden",
-	"displayName": "Alden",
+	"name": "coltran",
+	"displayName": "Coltran",
 	"description": "A feature-rich language support for PearScript in VS Code",
 	"author": "Kehinde Akinsanya",
 	"license": "MIT",
@@ -9,14 +9,14 @@
 		"type": "git",
 		"url": "https://github.com/aldenlang/aldenlans"
 	},
-	"publisher": "alden",
+	"publisher": "coltran",
 	"categories": [
 		"Programming Languages",
 		"Snippets"
 	],
-	"icon": "images/alden.png",
+	"icon": "images/coltran.png",
 	"keywords": [
-		"alden",
+		"coltran",
 		"aldenlans"
 	],
 	"engines": {
