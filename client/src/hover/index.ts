@@ -3,7 +3,7 @@ const setHover = ({ name, description, detail, symbolKind }: { name: string, des
 	const markdown = new MarkdownString();
 	const code: any = detail;
 	markdown.appendMarkdown(`(${symbolKind})`);
-	markdown.appendCodeblock(code, 'alden');
+	markdown.appendCodeblock(code, 'coltran');
 	markdown.appendMarkdown("---\n");
 	markdown.appendText(description);
 	markdown.isTrusted = true;

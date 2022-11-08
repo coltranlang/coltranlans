@@ -22,7 +22,7 @@ import {
 } from 'vscode-languageserver/node';
 
 //import vscode = require('vscode');
-import aldenLanguage from '../src/aldenLanguage.json';
+import coltranLanguage from '../src/coltranLanguage.json';
 
 
 import {
@@ -71,9 +71,9 @@ interface BuiltInModuleMethods {
 }
 
 
-const keywords: string[] = aldenLanguage.keywords;
-const builtIns: BuiltIns[] = aldenLanguage.builtins;
-const builtInModules: BuiltInModules[] = aldenLanguage.modules;
+const keywords: string[] = coltranLanguage.keywords;
+const builtIns: BuiltIns[] = coltranLanguage.builtins;
+const builtInModules: BuiltInModules[] = coltranLanguage.modules;
 
 let knownSymbols: CompletionItem[] = [];
 
@@ -145,7 +145,7 @@ connection.onDidChangeConfiguration(change => {
 		documentSettings.clear();
 	} else {
 		globalSettings = <ExampleSettings>(
-			(change.settings.aldenLanguageServer || defaultSettings)
+			(change.settings.coltranLanguageServer || defaultSettings)
 		);
 	}
 });
@@ -242,7 +242,7 @@ function findModulewithVariables(name: string): BuiltInVariables[] {
 }
 
 
-function aldenDocumentationMarkdown(documentation: string): MarkupContent {
+function coltranDocumentationMarkdown(documentation: string): MarkupContent {
 	return {
 		kind: MarkupKind.Markdown,
 		value: [
@@ -253,8 +253,12 @@ function aldenDocumentationMarkdown(documentation: string): MarkupContent {
 	};
 }
 
-
-
+// textDocument/completion
+connection.onCompletion((textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
+	//console.log("onCompletion", textDocumentPosition);
+	return []
+});
+	
 
 
 

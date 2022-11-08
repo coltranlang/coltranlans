@@ -7,7 +7,7 @@
 	"version": "0.4.9",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/aldenlang/aldenlans"
+		"url": "https://github.com/coltranlang/coltranlans"
 	},
 	"publisher": "coltran",
 	"categories": [
@@ -17,7 +17,7 @@
 	"icon": "images/coltran.png",
 	"keywords": [
 		"coltran",
-		"aldenlans"
+		"coltranlans"
 	],
 	"engines": {
 		"node": "*"
